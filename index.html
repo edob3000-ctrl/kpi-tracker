@@ -380,11 +380,25 @@ function fmtWeekLabel(mondayISO){
 
 /* ---------- Ampel ---------- */
 const AMPEL_PHRASES = {
-  ok: ['Läuft bei dir!', 'Sahne Leistung!', 'Safe im grünen Bereich', 'Alhamdulillah, passt!', 'Richtig stark!', 'Absolute Kante!', 'Voll im Flow', 'Top Woche!', 'Sauber gemacht!', 'Weiter so!', 'Digga, was für eine Woche!', 'Masallah, sauber!', 'Du ballerst!', 'König-Modus an!', 'Boss-Modus an!', 'Ehren-Woche!'],
-  warn: ['Fast geschafft!', 'Inshallah nächste Woche voll', 'Auf der Zielgeraden', 'Kurz vor knapp, geht noch!', 'Ein bisschen Zug noch', 'Nicht schlecht, Luft nach oben', 'Dran bleiben!', 'Fast im Ziel', 'Digga, kurz davor!', 'Du schaffst das noch!', 'Kleiner Push und du bist durch!', 'Ein letzter Sprint!', 'Bleib dran, lohnt sich!', 'Digga, das packst du noch!', 'Fast über der Ziellinie'],
-  bad: ['Da geht noch mehr', 'Inshallah wird’s noch', 'Kein Stress, nächste Woche', 'Comeback-Woche einläuten', 'Noch Potential nach oben', 'Nächste Woche volle Kraft', 'Kopf hoch, geht bergauf', 'Bisschen Gas geben, Digga', 'Du kriegst das gebacken!', 'Nicht aufgeben, Digga!', 'Noch ist nichts verloren', 'Kleine Schritte, großer Effekt', 'Du hast das drauf!', 'Nächste Woche zeigst du’s allen!', 'Morgen ist ein neuer Tag']
+  ok: ['Läuft bei dir!', 'Sahne Leistung!', 'Safe im grünen Bereich', 'Alhamdulillah, passt!', 'Richtig stark!', 'Absolute Kante!', 'Voll im Flow', 'Top Woche!', 'Sauber gemacht!', 'Weiter so!', 'Digga, was für eine Woche!', 'Masallah, sauber!', 'Du ballerst!', 'König-Modus an!', 'Boss-Modus an!', 'Ehren-Woche!',
+       'Liefert wie ein Uhrwerk', 'Das ist Champions League', 'Läuft wie geschmiert!', 'Einfach brutal gut', 'Mach den Sack zu, Digga!', 'Die Zahlen lügen nicht', 'Zielscheibe getroffen!', 'Maschine!', 'Ein Traum von Woche', 'Hier brennt der Baum', 'Ab in die Hall of Fame', 'Elite-Niveau', 'Bester Start, bleib so', 'Gönn dir den Feierabend!'],
+  warn: ['Fast geschafft!', 'Inshallah nächste Woche voll', 'Auf der Zielgeraden', 'Kurz vor knapp, geht noch!', 'Ein bisschen Zug noch', 'Nicht schlecht, Luft nach oben', 'Dran bleiben!', 'Fast im Ziel', 'Digga, kurz davor!', 'Du schaffst das noch!', 'Kleiner Push und du bist durch!', 'Ein letzter Sprint!', 'Bleib dran, lohnt sich!', 'Digga, das packst du noch!', 'Fast über der Ziellinie',
+       'Noch ein Anruf, dann sitzt es', 'Die Ziellinie riecht man schon', 'Gleich knackst du es', 'Halbzeit überstanden, jetzt Gas', 'Nur noch ein bisschen Mut', 'Das Ding ist zu schaffen', 'Hinten raus wird’s heiß', 'Gelb ist die neue Grün', 'Kleiner Kick fehlt noch', 'Eine Schippe drauf, Digga', 'Die Richtung stimmt', 'Bisschen Feuer noch!', 'So nah dran, nicht nachlassen', 'Du bist im Rennen', 'Jetzt nicht locker lassen'],
+  bad: ['Da geht noch mehr', 'Inshallah wird’s noch', 'Kein Stress, nächste Woche', 'Comeback-Woche einläuten', 'Noch Potential nach oben', 'Nächste Woche volle Kraft', 'Kopf hoch, geht bergauf', 'Bisschen Gas geben, Digga', 'Du kriegst das gebacken!', 'Nicht aufgeben, Digga!', 'Noch ist nichts verloren', 'Kleine Schritte, großer Effekt', 'Du hast das drauf!', 'Nächste Woche zeigst du’s allen!', 'Morgen ist ein neuer Tag',
+       'Erst mal Kaffee, dann Telefon', 'Der Hörer wartet schon', 'Jeder Call zählt', 'Heute ist ein guter Tag zum Starten', 'Aus der Asche zum Phönix', 'Ein Call ändert alles', 'Anlauf nehmen, dann Vollgas', 'Die Woche ist noch jung', 'Jetzt kommt die Aufholjagd', 'Mund abputzen, weitermachen', 'Einer geht immer noch', 'Nichts wie ran ans Telefon', 'Zeit für den Turbo', 'Der erste Schritt ist gemacht', 'Es wird, Digga, es wird']
 };
-function randomPhrase(cls){
+// Persönliche Sprüche mit Vorname ({n}); kommen zufällig dazu, nicht immer
+const AMPEL_NAME_PHRASES = {
+  ok: ['{n}, du bist ein Tier!', 'Respekt, {n}!', '{n} liefert wie ein Uhrwerk', '{n}, absolute Kante!', 'Das war stark, {n}!', 'Boss-Modus: {n}', '{n} räumt ab!', 'Ehre, {n}!', '{n} brennt heute', 'Läuft bei {n}!', '{n}, Maschine!', 'Danke für den Einsatz, {n}!'],
+  warn: ['{n}, gleich hast du es!', 'Fast da, {n}!', '{n}, ein Sprint noch!', 'Du packst das, {n}!', '{n}, jetzt nicht nachlassen', 'Noch ein Push, {n}!', '{n} ist auf der Zielgeraden', 'Kleiner Kick fehlt, {n}', '{n}, gleich kippt es auf Grün', 'Dranbleiben, {n}!'],
+  bad: ['{n}, Kopf hoch, es wird!', 'Komm, {n}, du kannst das!', '{n}, jetzt kommt die Aufholjagd', 'Auf geht’s, {n}!', '{n}, ein Call ändert alles', 'Nicht aufgeben, {n}!', '{n}, wir glauben an dich', 'Bisschen Gas, {n}!', '{n}, die Woche ist noch nicht vorbei', 'Los, {n}, schnapp dir den Hörer!']
+};
+function randomPhrase(cls, name){
+  const first = name ? String(name).trim().split(/\s+/)[0] : '';
+  if (first && Math.random() < 0.35){
+    const np = AMPEL_NAME_PHRASES[cls];
+    return np[Math.floor(Math.random()*np.length)].replace(/\{n\}/g, first);
+  }
   const pool = AMPEL_PHRASES[cls];
   return pool[Math.floor(Math.random()*pool.length)];
 }
@@ -782,7 +796,7 @@ async function renderMine(){
           ${totalSplit > 0 ? `${fbPct}% Fachbereich · ${hrPct}% HR <span style="opacity:.7;">(Ziel 70/30)</span>` : 'Noch keine Erfassung diese Woche'}
         </div>
         <div class="kpi-footer">
-          <span style="font-size:11px;font-weight:600;color:${style.sub}">${randomPhrase(ampel.cls)} · ${pct}%</span>
+          <span style="font-size:11px;font-weight:600;color:${style.sub}">${randomPhrase(ampel.cls, currentUser.name)} · ${pct}%</span>
           <div style="display:flex;gap:6px;">
             <button class="add-btn" style="background:${style.badge}" onclick="addFtEntry('fachbereich')">+ Fachbereich</button>
             <button class="add-btn" style="background:${style.badge}" onclick="addFtEntry('hr')">+ HR</button>
@@ -791,7 +805,7 @@ async function renderMine(){
     } else {
       footerHtml = `
         <div class="kpi-footer">
-          <span style="font-size:11px;font-weight:600;color:${style.sub}">${randomPhrase(ampel.cls)} · ${pct}%</span>
+          <span style="font-size:11px;font-weight:600;color:${style.sub}">${randomPhrase(ampel.cls, currentUser.name)} · ${pct}%</span>
           ${k.einheit === 'eur'
             ? `<button class="add-btn" style="background:${style.badge}" onclick="openEntryModal('${k.id}','${k.name}')">+ Wert</button>`
             : `<button class="add-btn" style="background:${style.badge};min-width:56px;" onclick="addPlusOne('${k.id}')">+ 1</button>`}
@@ -877,7 +891,7 @@ async function renderTeam(){
       <td><span class="unit-tag unit-${String(p.unit||'temp').toLowerCase()}">${esc(p.unit)}</span></td>
       ${cells}
       <td class="sum-col">${sumIst} / ${sumSoll}</td>
-      <td><span class="ampel-pill" style="background:${colors.bg};color:${colors.fg};border-radius:20px;">${randomPhrase(ampel.cls)} · ${pct}%</span></td>
+      <td><span class="ampel-pill" style="background:${colors.bg};color:${colors.fg};border-radius:20px;">${randomPhrase(ampel.cls, p.name)} · ${pct}%</span></td>
     </tr>`;
   });
   html += '</tbody>';
