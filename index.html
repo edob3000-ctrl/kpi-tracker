@@ -526,6 +526,22 @@ async function getFtSplit(kpiId, userId, week){
   });
   return split;
 }
+function isDec(k){ return k && (k.code === 'DEC' || k.code === 'FT'); }
+async function getDecSplitMap(startISO, endISO){
+  const dk = allKpis.find(isDec); const map = {};
+  if (!dk) return map;
+  const { data } = await sb.from('kpi_entries').select('user_id,kategorie,wert')
+    .eq('kpi_id', dk.id).gte('woche', startISO).lt('woche', endISO);
+  (data||[]).forEach(e => {
+    const m = map[e.user_id] = map[e.user_id] || { fb:0, hr:0 };
+    if (e.kategorie === 'fachbereich') m.fb += Number(e.wert);
+    else if (e.kategorie === 'hr') m.hr += Number(e.wert);
+  });
+  return map;
+}
+function decExtra(k, m){
+  return (isDec(k) && m) ? '<br><span style="font-size:10.5px;opacity:.8;">FB ' + m.fb + ' · HR ' + m.hr + '</span>' : '';
+}
 let savingEntry = false;
 async function addPlusOne(kpiId){
   if (savingEntry) return;
@@ -612,17 +628,22 @@ async function doFeierabend(){
       getTargetsSumRange(currentUser.id, start, end)
     ]);
 
+    const [wSplit, mSplit] = await Promise.all([
+      getDecSplitMap(currentWeekStart, addDaysISO(currentWeekStart, 7)),
+      getDecSplitMap(start, end)
+    ]);
+    const exTxt = (k, m) => (isDec(k) && m) ? 'davon Fachbereich ' + m.fb + ' / HR ' + m.hr : '';
     const weekRows = relevant.map(k=>{
       const soll = (weekTargets[k.id+'_'+currentUser.id]||{}).soll || 0;
       const ist = weekSums[k.id+'_'+currentUser.id] || 0;
       const pct = soll>0 ? Math.round((ist/soll)*100) : (ist>0?100:0);
-      return { name:k.name, ist, soll, pct };
+      return { name:k.name, ist, soll, pct, extra: exTxt(k, wSplit[currentUser.id]) };
     });
     const monthRows = relevant.map(k=>{
       const soll = monthTargets[k.id] || 0;
       const ist = monthSums[k.id] || 0;
       const pct = soll>0 ? Math.round((ist/soll)*100) : (ist>0?100:0);
-      return { name:k.name, ist, soll, pct };
+      return { name:k.name, ist, soll, pct, extra: exTxt(k, mSplit[currentUser.id]) };
     });
 
     const pdfBase64 = buildFeierabendPdf(weekRows, monthRows);
@@ -698,6 +719,12 @@ function drawPdfTable(doc, rows, startY){
     doc.text(String(r.ist), 110, y);
     doc.text(String(r.soll), 140, y);
     doc.text(r.pct + '%', 175, y);
+    if (r.extra){
+      y += 4.5;
+      doc.setFontSize(8); doc.setTextColor(90,102,96);
+      doc.text(r.extra, 18, y);
+      doc.setFontSize(10); doc.setTextColor(28,36,32);
+    }
     y += 7;
   });
   return y;
@@ -815,9 +842,10 @@ async function submitEntry(){
 
 /* ---------- Team-Übersicht ---------- */
 async function renderTeam(){
-  const [targets, sums] = await Promise.all([
+  const [targets, sums, decSplit] = await Promise.all([
     getTargetsMap(),
-    getEntrySumsMap(currentWeekStart)
+    getEntrySumsMap(currentWeekStart),
+    getDecSplitMap(currentWeekStart, addDaysISO(currentWeekStart, 7))
   ]);
   const kpisOrdered = allKpis;
   let html = '<thead><tr><th>Code</th><th>Berater</th><th>Unit</th>';
@@ -838,7 +866,7 @@ async function renderTeam(){
       if (k.einheit !== 'eur'){ sumIst += ist; sumSoll += soll; }
       if (soll > 0) pcts.push(Math.min(100, (ist/soll)*100));
       const style = kpiStyle(k.code);
-      cells += `<td style="background:${style.bg}66;"><strong style="color:${style.text}">${ist}</strong><span style="color:var(--ink-soft)"> / ${soll}</span></td>`;
+      cells += `<td style="background:${style.bg}66;"><strong style="color:${style.text}">${ist}</strong><span style="color:var(--ink-soft)"> / ${soll}</span>${decExtra(k, decSplit[p.id])}</td>`;
     });
     const pct = pcts.length ? Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length) : 0; // Mittelwert der KPI-Erfüllung (je KPI max. 100%)
     const ampel = ampelFor(pct);
@@ -969,6 +997,7 @@ async function renderWeekView(){
   document.getElementById('weekNextBtn').disabled = weekViewStart >= currentWeekStart;
   const nextMonday = addDaysISO(weekViewStart, 7);
 
+  const decSplit = await getDecSplitMap(weekViewStart, nextMonday);
   const [targets, sums, rep] = await Promise.all([
     getTargetsMap(),
     getEntrySumsMap(weekViewStart),
@@ -995,7 +1024,7 @@ async function renderWeekView(){
       pcts.push(Math.min(100, (ist / soll) * 100));
       if (pct >= 100) (reached[k.code] = reached[k.code] || []).push(p.name);
       const c = ampelColors(ampelFor(pct).cls);
-      cells += `<td style="text-align:center;background:${c.bg};color:${c.fg};">${fmtVal(k, ist)} / ${fmtVal(k, soll)}<br><strong>${pct}%</strong></td>`;
+      cells += `<td style="text-align:center;background:${c.bg};color:${c.fg};">${fmtVal(k, ist)} / ${fmtVal(k, soll)}<br><strong>${pct}%</strong>${decExtra(k, decSplit[p.id])}</td>`;
     });
     const total = pcts.length ? Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length) : 0;
     const tc = ampelColors(ampelFor(total).cls);
@@ -1043,7 +1072,7 @@ async function fetchAllEntries(startISO, endISO){
   // Supabase liefert max. 1000 Zeilen pro Abfrage, deshalb seitenweise laden
   const out = [];
   for (let from = 0; ; from += 1000){
-    const { data, error } = await sb.from('kpi_entries').select('kpi_id,user_id,wert')
+    const { data, error } = await sb.from('kpi_entries').select('kpi_id,user_id,wert,kategorie')
       .gte('woche', startISO).lt('woche', endISO).order('id').range(from, from + 999);
     if (error || !data) break;
     out.push(...data);
@@ -1068,7 +1097,14 @@ async function renderPeriodView(){
   const weeks = countMondays(start, end);
   const [targets, entries] = await Promise.all([ getTargetsMap(), fetchAllEntries(start, end) ]);
   const sums = {};
-  entries.forEach(e => { const k = e.kpi_id + '_' + e.user_id; sums[k] = (sums[k] || 0) + Number(e.wert); });
+  const decK = allKpis.find(isDec); const decSplit = {};
+  entries.forEach(e => {
+    const k = e.kpi_id + '_' + e.user_id; sums[k] = (sums[k] || 0) + Number(e.wert);
+    if (decK && e.kpi_id === decK.id){
+      const m = decSplit[e.user_id] = decSplit[e.user_id] || { fb:0, hr:0 };
+      if (e.kategorie === 'fachbereich') m.fb += Number(e.wert); else if (e.kategorie === 'hr') m.hr += Number(e.wert);
+    }
+  });
 
   const fmtVal = (k, v) => k.einheit === 'eur' ? Math.round(v).toLocaleString('de-DE') + ' €' : v;
   let html = '<thead><tr><th>Berater</th>';
@@ -1086,7 +1122,7 @@ async function renderPeriodView(){
       const pct = Math.round((ist / soll) * 100);
       pcts.push(Math.min(100, (ist / soll) * 100));
       const c = ampelColors(ampelFor(pct).cls);
-      cells += `<td style="text-align:center;background:${c.bg};color:${c.fg};">${fmtVal(k, ist)} / ${fmtVal(k, soll)}<br><strong>${pct}%</strong></td>`;
+      cells += `<td style="text-align:center;background:${c.bg};color:${c.fg};">${fmtVal(k, ist)} / ${fmtVal(k, soll)}<br><strong>${pct}%</strong>${decExtra(k, decSplit[p.id])}</td>`;
     });
     const total = pcts.length ? Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length) : 0;
     const tc = ampelColors(ampelFor(total).cls);
