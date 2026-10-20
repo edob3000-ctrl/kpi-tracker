@@ -203,6 +203,7 @@
     <div class="tabs" id="tabs">
       <button class="active" data-tab="mine" onclick="switchTab('mine')">Meine KPIs</button>
       <button data-tab="team" onclick="switchTab('team')">Team-Übersicht</button>
+      <button data-tab="period" onclick="switchTab('period'); renderPeriodView()">Monat / Jahr</button>
       <button data-tab="week" id="weekTabBtn" class="hidden" onclick="switchTab('week'); renderWeekView()">Wochenübersicht</button>
       <button data-tab="admin" id="adminTabBtn" class="hidden" onclick="switchTab('admin')">Admin <span id="pendingBadge" class="hidden" style="background:var(--bad-fg);color:#fff;border-radius:20px;font-size:10.5px;padding:1px 7px;margin-left:4px;"></span></button>
     </div>
@@ -221,6 +222,22 @@
       <div style="overflow-x:auto;">
         <table class="kpi-table" id="teamTable"></table>
       </div>
+    </div>
+
+    <!-- MONAT / JAHR -->
+    <div id="tab-period" class="hidden">
+      <h2 class="section-title">Monats- und Jahresübersicht</h2>
+      <p class="section-sub" id="periodLabel"></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+        <button class="add-btn" id="periodMonthBtn" onclick="setPeriodMode('month')">Monat</button>
+        <button class="add-btn" id="periodYearBtn" onclick="setPeriodMode('year')">Jahr</button>
+        <span style="width:12px;"></span>
+        <button class="add-btn" onclick="shiftPeriod(-1)">&larr; Zurück</button>
+        <button class="add-btn" id="periodNextBtn" onclick="shiftPeriod(1)">Weiter &rarr;</button>
+        <button class="add-btn" style="background:var(--green-mid)" onclick="shiftPeriod(0)">Aktuell</button>
+      </div>
+      <div style="overflow-x:auto;"><table class="kpi-table" id="periodTable"></table></div>
+      <p class="save-hint">Soll = Wochenziel × Anzahl der Wochen (Montage) im Zeitraum. Gesamt = Mittelwert der KPI-Erfüllung (je KPI max. 100 %). Urlaub und Feiertage sind im Soll nicht herausgerechnet.</p>
     </div>
 
     <!-- ADMIN -->
@@ -509,9 +526,28 @@ async function getFtSplit(kpiId, userId, week){
   });
   return split;
 }
+let savingEntry = false;
+async function addPlusOne(kpiId){
+  if (savingEntry) return;
+  savingEntry = true;
+  try {
+    await sb.from('kpi_entries').insert({
+      kpi_id: kpiId,
+      user_id: currentUser.id,
+      erfasst_von: currentUser.id,
+      wert: 1,
+      woche: currentWeekStart
+    });
+    await renderMine();
+    await renderTeam();
+  } finally { savingEntry = false; }
+}
 async function addFtEntry(kategorie){
   const ft = allKpis.find(k => k.code === 'FT');
   if (!ft) return;
+  if (savingEntry) return;
+  savingEntry = true;
+  try {
   await sb.from('kpi_entries').insert({
     kpi_id: ft.id,
     user_id: currentUser.id,
@@ -522,6 +558,7 @@ async function addFtEntry(kategorie){
   });
   await renderMine();
   await renderTeam();
+  } finally { savingEntry = false; }
 }
 
 /* ---------- Monats-Aggregation (für Feierabend-Report) ---------- */
@@ -669,7 +706,7 @@ function drawPdfTable(doc, rows, startY){
 /* ---------- Tabs ---------- */
 function switchTab(tab){
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
-  ['mine','team','week','admin'].forEach(t=>{
+  ['mine','team','period','week','admin'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('hidden', t!==tab);
   });
 }
@@ -681,6 +718,7 @@ const KPI_STYLE = {
   FT:    { bg:'#FCE8F3', badge:'#B23A83', text:'#5C1637', sub:'#8C2C64', icon:'\u{1F4DE}' },
   F2F:   { bg:'#FAEEDA', badge:'#BA7517', text:'#412402', sub:'#854F0B', icon:'\u{1F91D}' },
   CV:    { bg:'#FAECE7', badge:'#993C1D', text:'#4A1B0C', sub:'#993C1D', icon:'\u{1F4C4}' },
+  VT:    { bg:'#E3F4F4', badge:'#16808A', text:'#0A3C41', sub:'#0F6670', icon:'\u{1F3C6}' },
   MARGE: { bg:'#E7F1FB', badge:'#1D5D99', text:'#0C2C4A', sub:'#1D5D99', icon:'\u{1F4B0}' }
 };
 function kpiStyle(code){ return KPI_STYLE[code] || KPI_STYLE.NL; }
@@ -726,7 +764,9 @@ async function renderMine(){
       footerHtml = `
         <div class="kpi-footer">
           <span style="font-size:11px;font-weight:600;color:${style.sub}">${randomPhrase(ampel.cls)} · ${pct}%</span>
-          <button class="add-btn" style="background:${style.badge}" onclick="openEntryModal('${k.id}','${k.name}')">+ Wert</button>
+          ${k.einheit === 'eur'
+            ? `<button class="add-btn" style="background:${style.badge}" onclick="openEntryModal('${k.id}','${k.name}')">+ Wert</button>`
+            : `<button class="add-btn" style="background:${style.badge};min-width:56px;" onclick="addPlusOne('${k.id}')">+ 1</button>`}
         </div>`;
     }
 
@@ -969,6 +1009,92 @@ async function renderWeekView(){
     const names = reached[k.code] || [];
     return `<div><strong>${esc(k.name)}:</strong> ${names.length ? names.map(esc).join(', ') : '<span style="color:var(--ink-soft)">niemand</span>'}</div>`;
   }).join('');
+}
+
+/* ---------- Monat / Jahr (alle Berater) ---------- */
+let periodMode = 'month';
+let periodYear = null, periodMonth = null;
+function initPeriod(){
+  if (periodYear === null){ const n = new Date(); periodYear = n.getFullYear(); periodMonth = n.getMonth(); }
+}
+function setPeriodMode(m){ periodMode = m; renderPeriodView(); }
+function shiftPeriod(n){
+  initPeriod();
+  if (n === 0){ const t = new Date(); periodYear = t.getFullYear(); periodMonth = t.getMonth(); }
+  else if (periodMode === 'month'){
+    const d = new Date(periodYear, periodMonth + n, 1);
+    periodYear = d.getFullYear(); periodMonth = d.getMonth();
+  } else { periodYear += n; }
+  renderPeriodView();
+}
+function periodBounds(){
+  if (periodMode === 'month') return { start: fmtISO(new Date(periodYear, periodMonth, 1)), end: fmtISO(new Date(periodYear, periodMonth + 1, 1)) };
+  return { start: fmtISO(new Date(periodYear, 0, 1)), end: fmtISO(new Date(periodYear + 1, 0, 1)) };
+}
+function countMondays(startISO, endISO){
+  let n = 0;
+  for (let d = new Date(startISO + 'T00:00:00Z'); d < new Date(endISO + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1)){
+    if (d.getUTCDay() === 1) n++;
+  }
+  return n;
+}
+async function fetchAllEntries(startISO, endISO){
+  // Supabase liefert max. 1000 Zeilen pro Abfrage, deshalb seitenweise laden
+  const out = [];
+  for (let from = 0; ; from += 1000){
+    const { data, error } = await sb.from('kpi_entries').select('kpi_id,user_id,wert')
+      .gte('woche', startISO).lt('woche', endISO).order('id').range(from, from + 999);
+    if (error || !data) break;
+    out.push(...data);
+    if (data.length < 1000) break;
+  }
+  return out;
+}
+async function renderPeriodView(){
+  initPeriod();
+  const now = new Date();
+  const isMonth = periodMode === 'month';
+  document.getElementById('periodMonthBtn').style.opacity = isMonth ? '1' : '.55';
+  document.getElementById('periodYearBtn').style.opacity = isMonth ? '.55' : '1';
+  document.getElementById('periodLabel').textContent = isMonth
+    ? new Date(periodYear, periodMonth, 1).toLocaleDateString('de-DE', { month:'long', year:'numeric' })
+    : 'Jahr ' + periodYear;
+  document.getElementById('periodNextBtn').disabled = isMonth
+    ? (periodYear > now.getFullYear() || (periodYear === now.getFullYear() && periodMonth >= now.getMonth()))
+    : periodYear >= now.getFullYear();
+
+  const { start, end } = periodBounds();
+  const weeks = countMondays(start, end);
+  const [targets, entries] = await Promise.all([ getTargetsMap(), fetchAllEntries(start, end) ]);
+  const sums = {};
+  entries.forEach(e => { const k = e.kpi_id + '_' + e.user_id; sums[k] = (sums[k] || 0) + Number(e.wert); });
+
+  const fmtVal = (k, v) => k.einheit === 'eur' ? Math.round(v).toLocaleString('de-DE') + ' €' : v;
+  let html = '<thead><tr><th>Berater</th>';
+  allKpis.forEach(k => html += `<th>${k.code}</th>`);
+  html += '<th>Gesamt</th></tr></thead><tbody>';
+
+  allProfiles.filter(p => p.status !== 'pending').forEach(p => {
+    const pcts = [];
+    let cells = '';
+    allKpis.forEach(k => {
+      if (k.gilt_fuer !== 'ALLE' && k.gilt_fuer !== p.unit){ cells += '<td style="text-align:center;color:var(--ink-soft)">–</td>'; return; }
+      const soll = Number((targets[k.id + '_' + p.id] || {}).soll || 0) * weeks;
+      const ist = sums[k.id + '_' + p.id] || 0;
+      if (soll <= 0){ cells += `<td style="text-align:center;color:var(--ink-soft)">${fmtVal(k, ist)}<br>kein Ziel</td>`; return; }
+      const pct = Math.round((ist / soll) * 100);
+      pcts.push(Math.min(100, (ist / soll) * 100));
+      const c = ampelColors(ampelFor(pct).cls);
+      cells += `<td style="text-align:center;background:${c.bg};color:${c.fg};">${fmtVal(k, ist)} / ${fmtVal(k, soll)}<br><strong>${pct}%</strong></td>`;
+    });
+    const total = pcts.length ? Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length) : 0;
+    const tc = ampelColors(ampelFor(total).cls);
+    const me = currentUser && p.id === currentUser.id ? ' (du)' : '';
+    html += `<tr><td><strong>${esc(p.name)}</strong>${me}<br><span class="unit-tag unit-${String(p.unit || 'temp').toLowerCase()}">${esc(p.unit)}</span></td>${cells}
+      <td style="text-align:center;background:${tc.bg};color:${tc.fg};"><strong>${total}%</strong></td></tr>`;
+  });
+  html += '</tbody>';
+  document.getElementById('periodTable').innerHTML = html;
 }
 
 /* ---------- Admin: Feierabend-Berichte ---------- */
