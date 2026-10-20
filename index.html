@@ -543,7 +543,7 @@ async function addPlusOne(kpiId){
   } finally { savingEntry = false; }
 }
 async function addFtEntry(kategorie){
-  const ft = allKpis.find(k => k.code === 'FT');
+  const ft = allKpis.find(k => k.code === 'DEC' || k.code === 'FT');
   if (!ft) return;
   if (savingEntry) return;
   savingEntry = true;
@@ -715,6 +715,7 @@ function switchTab(tab){
 const KPI_STYLE = {
   NL:    { bg:'#EEEDFE', badge:'#534AB7', text:'#26215C', sub:'#3C3489', icon:'\u{1F3AF}' },
   TIM:   { bg:'#E6F4EA', badge:'#1F7A43', text:'#0F3D22', sub:'#1F7A43', icon:'\u{1F464}' },
+  DEC:   { bg:'#FCE8F3', badge:'#B23A83', text:'#5C1637', sub:'#8C2C64', icon:'\u{1F4DE}' },
   FT:    { bg:'#FCE8F3', badge:'#B23A83', text:'#5C1637', sub:'#8C2C64', icon:'\u{1F4DE}' },
   F2F:   { bg:'#FAEEDA', badge:'#BA7517', text:'#412402', sub:'#854F0B', icon:'\u{1F91D}' },
   CV:    { bg:'#FAECE7', badge:'#993C1D', text:'#4A1B0C', sub:'#993C1D', icon:'\u{1F4C4}' },
@@ -744,7 +745,7 @@ async function renderMine(){
     card.style.border = 'none';
 
     let footerHtml;
-    if (k.code === 'FT'){
+    if (k.code === 'DEC' || k.code === 'FT'){
       const split = await getFtSplit(k.id, currentUser.id, currentWeekStart);
       const totalSplit = split.fachbereich + split.hr;
       const fbPct = totalSplit > 0 ? Math.round((split.fachbereich/totalSplit)*100) : 0;
