@@ -304,6 +304,33 @@
       </div>
 
       <div class="card-block">
+        <h3>Eingaben korrigieren</h3>
+        <p class="section-sub" style="margin-bottom:12px;">Einzelne Erfassungen eines Beraters ansehen, ändern, löschen oder nachtragen. Änderungen wirken sofort auf alle Übersichten.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:12px;">
+          <label style="font-size:12px;color:var(--ink-soft);">Berater<br>
+            <select id="corrUser" onchange="renderCorrections()" style="padding:8px;border:1px solid var(--border);border-radius:6px;min-width:170px;"></select></label>
+          <label style="font-size:12px;color:var(--ink-soft);">KPI<br>
+            <select id="corrKpi" onchange="renderCorrections()" style="padding:8px;border:1px solid var(--border);border-radius:6px;min-width:150px;"></select></label>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="add-btn" onclick="shiftCorrWeek(-1)">&larr;</button>
+            <span id="corrWeekLabel" style="font-size:13px;min-width:150px;text-align:center;"></span>
+            <button class="add-btn" onclick="shiftCorrWeek(1)">&rarr;</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;"><table class="kpi-table" id="corrTable"></table></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin-top:14px;">
+          <label style="font-size:12px;color:var(--ink-soft);">Nachtragen: KPI<br>
+            <select id="corrAddKpi" style="padding:8px;border:1px solid var(--border);border-radius:6px;"></select></label>
+          <label style="font-size:12px;color:var(--ink-soft);">Wert (auch negativ)<br>
+            <input id="corrAddVal" type="number" step="any" value="1" style="width:90px;padding:8px;border:1px solid var(--border);border-radius:6px;"></label>
+          <label style="font-size:12px;color:var(--ink-soft);">Decider: Art<br>
+            <select id="corrAddCat" style="padding:8px;border:1px solid var(--border);border-radius:6px;"><option value="">–</option><option value="fachbereich">Fachbereich</option><option value="hr">HR</option></select></label>
+          <button class="add-btn" style="padding:10px 14px;" onclick="corrAdd()">Nachtragen</button>
+        </div>
+        <div class="save-hint" id="corrHint"></div>
+      </div>
+
+      <div class="card-block">
         <h3>Individuelle Wochenziele</h3>
         <div style="overflow-x:auto;">
           <table class="kpi-table" id="adminTable"></table>
@@ -696,12 +723,12 @@ function buildFeierabendPdf(weekRows, monthRows){
   doc.text('Feierabend-Report', 14, 18);
   doc.setFontSize(11);
   doc.setTextColor(90,102,96);
-  doc.text(currentUser.name + ' · ' + dateStr, 14, 25);
+  doc.text(currentUser.name + ' \u00b7 ' + dateStr, 14, 25);
 
   let y = 40;
   doc.setFontSize(13);
   doc.setTextColor(28,56,41);
-  doc.text('Wochenuebersicht · ' + fmtWeekLabel(currentWeekStart), 14, y);
+  doc.text('Wochenuebersicht \u00b7 ' + fmtWeekLabel(currentWeekStart), 14, y);
   y += 8;
   y = drawPdfTable(doc, weekRows, y);
 
@@ -709,7 +736,7 @@ function buildFeierabendPdf(weekRows, monthRows){
   doc.setFontSize(13);
   doc.setTextColor(28,56,41);
   const monthName = new Date().toLocaleDateString('de-DE', { month:'long', year:'numeric' });
-  doc.text('Monatsuebersicht · ' + monthName, 14, y);
+  doc.text('Monatsuebersicht \u00b7 ' + monthName, 14, y);
   y += 8;
   drawPdfTable(doc, monthRows, y);
 
@@ -1179,11 +1206,110 @@ function downloadReport(id){
   a.click();
 }
 
+/* ---------- Admin: Eingaben korrigieren ---------- */
+let corrWeek = null;
+function corrInit(){
+  const uSel = document.getElementById('corrUser');
+  if (!uSel) return;
+  const keep = { u: uSel.value, k: document.getElementById('corrKpi').value, a: document.getElementById('corrAddKpi').value };
+  uSel.innerHTML = allProfiles.filter(p => p.status !== 'pending')
+    .map(p => `<option value="${p.id}">${esc(p.name)}${p.code ? ' (' + esc(p.code) + ')' : ''}</option>`).join('');
+  const kOpts = allKpis.map(k => `<option value="${k.id}">${esc(k.name)}</option>`).join('');
+  document.getElementById('corrKpi').innerHTML = '<option value="">Alle KPIs</option>' + kOpts;
+  document.getElementById('corrAddKpi').innerHTML = kOpts;
+  if (keep.u) uSel.value = keep.u;
+  if (keep.k) document.getElementById('corrKpi').value = keep.k;
+  if (keep.a) document.getElementById('corrAddKpi').value = keep.a;
+  if (!corrWeek) corrWeek = currentWeekStart;
+}
+function shiftCorrWeek(n){ corrWeek = addDaysISO(corrWeek || currentWeekStart, 7 * n); renderCorrections(); }
+function corrMsg(text, ok){
+  const h = document.getElementById('corrHint');
+  h.style.color = ok ? 'var(--ok-fg)' : 'var(--bad-fg)';
+  h.textContent = text;
+}
+async function renderCorrections(){
+  if (!document.getElementById('corrUser')) return;
+  if (!corrWeek) corrWeek = currentWeekStart;
+  document.getElementById('corrWeekLabel').textContent = fmtWeekLabel(corrWeek);
+  const uid = document.getElementById('corrUser').value;
+  const kid = document.getElementById('corrKpi').value;
+  const table = document.getElementById('corrTable');
+  if (!uid){ table.innerHTML = ''; return; }
+  let q = sb.from('kpi_entries').select('*').eq('user_id', uid).eq('woche', corrWeek).order('erfasst_am');
+  if (kid) q = q.eq('kpi_id', kid);
+  const { data, error } = await q;
+  if (error){ table.innerHTML = ''; corrMsg('Fehler beim Laden: ' + error.message, false); return; }
+  const rows = data || [];
+  let html = '<thead><tr><th>Zeitpunkt</th><th>KPI</th><th>Wert</th><th>Art</th><th></th></tr></thead><tbody>';
+  if (!rows.length) html += '<tr><td colspan="5" style="color:var(--ink-soft)">Keine Einträge in dieser Woche.</td></tr>';
+  let sum = 0;
+  rows.forEach(e => {
+    const k = allKpis.find(x => x.id === e.kpi_id);
+    const dec = isDec(k);
+    sum += Number(e.wert);
+    const when = e.erfasst_am ? new Date(e.erfasst_am).toLocaleString('de-DE', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '–';
+    const cat = dec
+      ? `<select id="cc_${e.id}" style="padding:4px;border:1px solid var(--border);border-radius:5px;">
+           <option value=""${!e.kategorie ? ' selected' : ''}>(ohne)</option>
+           <option value="fachbereich"${e.kategorie === 'fachbereich' ? ' selected' : ''}>Fachbereich</option>
+           <option value="hr"${e.kategorie === 'hr' ? ' selected' : ''}>HR</option></select>`
+      : '–';
+    html += `<tr><td>${when}</td><td>${esc(k ? k.name : '?')}</td>
+      <td><input type="number" step="any" class="target-input" style="width:80px;" id="cw_${e.id}" value="${e.wert}"></td>
+      <td>${cat}</td>
+      <td style="white-space:nowrap;">
+        <button class="add-btn" onclick="corrSave('${e.id}', ${dec})">Speichern</button>
+        <button class="add-btn" style="background:var(--bad-fg);" onclick="corrDelete('${e.id}')">Löschen</button></td></tr>`;
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+  corrMsg(rows.length ? `${rows.length} Einträge, Summe ${sum}` : '', true);
+}
+async function corrAfterChange(){
+  await renderCorrections();
+  await renderTeam();
+  await renderMine();
+}
+async function corrSave(id, hasCat){
+  const wert = Number(document.getElementById('cw_' + id).value);
+  if (isNaN(wert)){ corrMsg('Bitte eine gültige Zahl eingeben.', false); return; }
+  const payload = { wert };
+  if (hasCat) payload.kategorie = document.getElementById('cc_' + id).value || null;
+  const { data, error } = await sb.from('kpi_entries').update(payload).eq('id', id).select();
+  if (error || !data || !data.length){ corrMsg('Speichern fehlgeschlagen' + (error ? ': ' + error.message : ' (keine Berechtigung?)'), false); return; }
+  await corrAfterChange();
+  corrMsg('Gespeichert.', true);
+}
+async function corrDelete(id){
+  if (!confirm('Diesen Eintrag wirklich löschen? Das kann nicht rückgängig gemacht werden.')) return;
+  const { data, error } = await sb.from('kpi_entries').delete().eq('id', id).select();
+  if (error || !data || !data.length){ corrMsg('Löschen fehlgeschlagen' + (error ? ': ' + error.message : ' (keine Berechtigung?)'), false); return; }
+  await corrAfterChange();
+  corrMsg('Gelöscht.', true);
+}
+async function corrAdd(){
+  const uid = document.getElementById('corrUser').value;
+  const kid = document.getElementById('corrAddKpi').value;
+  const wert = Number(document.getElementById('corrAddVal').value);
+  const cat = document.getElementById('corrAddCat').value;
+  if (!uid || !kid || isNaN(wert)){ corrMsg('Bitte Berater, KPI und Wert angeben.', false); return; }
+  const k = allKpis.find(x => x.id === kid);
+  const row = { kpi_id: kid, user_id: uid, erfasst_von: currentUser.id, wert, woche: corrWeek || currentWeekStart };
+  if (isDec(k) && cat) row.kategorie = cat;
+  const { error } = await sb.from('kpi_entries').insert(row);
+  if (error){ corrMsg('Nachtragen fehlgeschlagen: ' + error.message, false); return; }
+  await corrAfterChange();
+  corrMsg('Nachgetragen.', true);
+}
+
 /* ---------- Admin: Ziele bearbeiten ---------- */
 async function renderAdmin(){
   await renderPending();
   const np = document.getElementById('newPass'); if (np && !np.value) np.value = randomPassword();
   await renderReports();
+  corrInit();
+  await renderCorrections();
   const targets = await getTargetsMap();
   const kpisOrdered = allKpis;
   let html = '<thead><tr><th>Code</th><th>Berater</th><th>Unit</th>';
