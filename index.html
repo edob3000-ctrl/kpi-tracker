@@ -198,11 +198,39 @@
   .strip-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
   .strip-me{background:var(--green-pale);color:var(--green-dark);font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;}
   .strip-link{font-size:14px;font-weight:700;color:var(--green-dark);}
+  .tab-badge{background:#F48D40;color:var(--ink);font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;margin-left:6px;}
+  .vt-notice{background:#FFF1E4;border:1px solid #F48D40;border-radius:12px;padding:10px 18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;margin:-14px 0 22px;font-size:14px;cursor:pointer;}
+  .vt-new{background:#F48D40;color:var(--ink);font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;margin-right:8px;}
+  .vt-seg{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;align-items:center;}
+  .vt-seg button{background:#fff;border:2px solid var(--green-dark);color:var(--green-dark);border-radius:999px;padding:10px 16px;min-height:44px;font-size:14px;font-weight:700;cursor:pointer;}
+  .vt-seg button.active{background:var(--green-dark);color:#fff;}
+  .vt-seg input{flex:1 1 200px;padding:10px 12px;border:1px solid var(--border);border-radius:999px;font-size:14px;min-height:44px;box-sizing:border-box;}
+  .vt-list{display:flex;flex-direction:column;gap:12px;max-width:760px;}
+  .vt-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;}
+  .vt-card.done{border-left:4px solid #F48D40;}
+  .vt-card .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;}
+  .vt-card .firma{font-weight:700;font-size:16px;color:var(--green-dark);}
+  .vt-card .txt{font-size:14px;line-height:1.4;}
+  .vt-card .row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;}
+  .vt-card .meta{font-size:12px;color:var(--ink-soft);}
+  .vt-card a{font-size:13px;font-weight:600;color:var(--green-dark);}
+  .vt-pill{background:var(--green-pale);color:var(--green-dark);font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .vt-pill.warm{background:#FFF1E4;color:#9A4F10;}
+  .vt-btn{background:var(--green-dark);color:#fff;border:1px solid var(--green-dark);border-radius:6px;padding:8px 14px;min-height:44px;font-size:13px;font-weight:600;cursor:pointer;}
+  .vt-btn.ghost{background:transparent;color:var(--green-dark);}
+  .vt-btn.small{min-height:32px;padding:4px 10px;font-size:12px;}
+  .vt-form{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin:0 0 18px;max-width:760px;}
+  .vt-form summary{cursor:pointer;font-weight:700;color:var(--green-dark);}
+  .vt-form label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px;}
+  .vt-form input,.vt-form textarea,.vt-form select,#vtModal textarea{width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-size:14px;font-family:inherit;}
+  #vtModal .modal{width:min(440px,92vw);}
+  #vtModal textarea{min-height:90px;margin-bottom:6px;}
   .stage-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
   .stage-chip{background:#fff;border:2px solid var(--green-dark);color:var(--green-dark);border-radius:999px;padding:10px 20px;min-height:44px;font-size:14px;font-weight:700;cursor:pointer;}
   .stage-chip.active{background:var(--green-dark);color:#fff;}
   @media(max-width:560px){
     .stage-strip{padding:12px 14px;gap:10px 12px;}
+    .vt-notice{padding:10px 14px;font-size:13px;}
     .strip-label{order:1;flex:1;}
     .strip-right{order:2;}
     .strip-items{order:3;width:100%;flex-wrap:nowrap;justify-content:space-between;gap:6px;}
@@ -278,6 +306,7 @@
     <div class="tabs" id="tabs">
       <button class="active" data-tab="mine" onclick="switchTab('mine')">Meine KPIs</button>
       <button data-tab="stage" onclick="switchTab('stage'); renderStage()">Wochenbühne</button>
+      <button data-tab="vertrieb" onclick="switchTab('vertrieb'); openVertrieb()">Vertrieb <span id="vtBadge" class="tab-badge hidden"></span></button>
       <button data-tab="team" onclick="switchTab('team')">Team-Übersicht</button>
       <button data-tab="period" onclick="switchTab('period'); renderPeriodView()">Monat / Jahr</button>
       <button data-tab="week" id="weekTabBtn" class="hidden" onclick="switchTab('week'); renderWeekView()">Wochenübersicht</button>
@@ -287,6 +316,7 @@
     <!-- MEINE KPIS -->
     <div id="tab-mine">
       <div id="stageStrip" class="stage-strip" role="button" tabindex="0" aria-label="Zur Wochenbühne" onclick="switchTab('stage'); renderStage()" onkeydown="if(event.key==='Enter'){switchTab('stage'); renderStage();}"></div>
+      <div id="vtNotice" class="vt-notice hidden" role="button" tabindex="0" onclick="switchTab('vertrieb'); openVertrieb()"></div>
       <h2 class="section-title">Meine Woche</h2>
       <p class="section-sub" id="weekLabel"></p>
       <div class="kpi-grid" id="myKpiGrid"></div>
@@ -298,6 +328,23 @@
       <p class="section-sub">Die Top 3 der Woche, live. Gewertet wird nach Zielerreichung in Prozent, es zählt, was seit Montag erfasst wurde.</p>
       <div id="stageChips" class="stage-chips"></div>
       <div id="stageBody"></div>
+    </div>
+
+    <!-- VERTRIEB -->
+    <div id="tab-vertrieb" class="hidden">
+      <h2 class="section-title">Vertrieb</h2>
+      <p class="section-sub">Akquise-Tipps und Marktinfos. Erledigtes bleibt 30 Tage sichtbar und wandert dann ins Archiv.</p>
+      <details class="vt-form hidden" id="vtForm">
+        <summary>+ Neuer Eintrag</summary>
+        <label for="vtFirma">Firma</label><input id="vtFirma" maxlength="120">
+        <label for="vtHinweis">Hinweis</label><textarea id="vtHinweis" rows="3" maxlength="600"></textarea>
+        <label for="vtLinks">Links (einer pro Zeile, z. B. Salesforce, LinkedIn, Stellenanzeige)</label><textarea id="vtLinks" rows="2"></textarea>
+        <label for="vtWer">Zuständig</label><select id="vtWer"></select>
+        <p class="login-error" id="vtFormError"></p>
+        <button class="vt-btn" style="margin-top:12px" onclick="saveVertriebItem()">Eintrag anlegen</button>
+      </details>
+      <div class="vt-seg" id="vtSeg"></div>
+      <div id="vtBody" class="vt-list"></div>
     </div>
 
     <!-- TEAM -->
@@ -427,6 +474,19 @@
 </div>
 
 <!-- Freischalt-Modal -->
+<div id="vtModal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h3 id="vtModalFirma"></h3>
+    <label style="font-size:13px;font-weight:600;" for="vtNote">Ergebnis <span style="color:var(--bad-fg)">*</span> <span style="font-weight:400;color:var(--ink-soft)">(Pflichtfeld, mindestens ein Satz)</span></label>
+    <textarea id="vtNote" maxlength="500" oninput="vtNoteChanged()"></textarea>
+    <p class="save-hint" style="margin:0 0 12px">Dein Name und das Datum werden automatisch gespeichert.</p>
+    <div class="actions">
+      <button class="cancel" onclick="closeVtModal()">Abbrechen</button>
+      <button class="save" id="vtSaveBtn" onclick="confirmVtDone()" disabled style="opacity:.5">Speichern</button>
+    </div>
+  </div>
+</div>
+
 <div id="approveModal" class="modal-backdrop hidden">
   <div class="modal">
     <h3 id="approveModalTitle">Nutzer freischalten</h3>
@@ -600,6 +660,7 @@ async function afterLogin(){
   await renderTeam();
   await checkFeierabendDone();
   startStageLive();
+  startVertriebLive();
   if (currentUser.role === 'admin'){
     await renderAdmin();
     subscribeToNewSignups();
@@ -860,7 +921,7 @@ function drawPdfTable(doc, rows, startY){
 /* ---------- Tabs ---------- */
 function switchTab(tab){
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
-  ['mine','stage','team','period','week','admin'].forEach(t=>{
+  ['mine','stage','vertrieb','team','period','week','admin'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('hidden', t!==tab);
   });
 }
@@ -1680,6 +1741,156 @@ const _addPlusOneOrig = addPlusOne;
 addPlusOne = async function(kpiId){ await _addPlusOneOrig(kpiId); renderStage(); };
 const _addFtEntryOrig = addFtEntry;
 addFtEntry = async function(kategorie){ await _addFtEntryOrig(kategorie); renderStage(); };
+
+
+/* ---------- Vertrieb ---------- */
+const VT_DAYS = 30;
+let vtItems = [], vtView = 'offen', vtSearch = '', vtMarkId = null, vtReady = true, vtChannel = null;
+const vtSeenKey = () => 'vertrieb_seen_' + (currentUser ? currentUser.id : '');
+function vtGetSeen(){ try { return localStorage.getItem(vtSeenKey()); } catch(e){ return null; } }
+function vtSetSeen(){ try { localStorage.setItem(vtSeenKey(), new Date().toISOString()); } catch(e){} }
+function vtFirst(id){ const p = allProfiles.find(x => x.id === id); return p ? String(p.name || '').trim().split(/\s+/)[0] : 'jemand'; }
+function vtAgo(iso){
+  const m = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+  if (m < 60) return 'vor ' + Math.max(1, m) + ' Min.';
+  if (m < 1440) return 'vor ' + Math.round(m / 60) + ' Std.';
+  const d = Math.round(m / 1440); return 'vor ' + d + (d === 1 ? ' Tag' : ' Tagen');
+}
+function vtDate(iso){ return new Date(iso).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', timeZone:'Europe/Berlin' }); }
+function vtDaysSince(iso){ return (Date.now() - new Date(iso).getTime()) / 86400000; }
+function vtLinkObj(raw){
+  let u = String(raw || '').trim(); if (!u) return null;
+  if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+  let host; try { host = new URL(u).hostname.replace(/^www\./, ''); } catch(e){ return null; }
+  const label = /salesforce|force\.com/i.test(host) ? 'Salesforce' : /linkedin/i.test(host) ? 'LinkedIn' : host;
+  return { url: u, label };
+}
+function vtIsArchived(it){ return it.status === 'bearbeitet' && it.bearbeitet_am && vtDaysSince(it.bearbeitet_am) > VT_DAYS; }
+
+async function loadVertrieb(){
+  if (!currentUser) return;
+  const { data, error } = await sb.from('vertrieb_items').select('*').order('erstellt_am', { ascending:false }).limit(1000);
+  if (error){ vtReady = false; vtItems = []; }
+  else { vtReady = true; vtItems = data || []; }
+  updateVertriebHints();
+  if (!document.getElementById('tab-vertrieb').classList.contains('hidden')) renderVertrieb();
+}
+function updateVertriebHints(){
+  const open = vtItems.filter(i => i.status === 'offen');
+  const badge = document.getElementById('vtBadge');
+  badge.textContent = open.length; badge.classList.toggle('hidden', !open.length);
+  const seen = vtGetSeen(); const seenT = seen ? new Date(seen).getTime() : Date.now() - 7 * 86400000;
+  const fresh = open.filter(i => i.erstellt_von !== currentUser.id && new Date(i.erstellt_am).getTime() > seenT);
+  const bar = document.getElementById('vtNotice');
+  if (!fresh.length){ bar.classList.add('hidden'); return; }
+  const n = fresh[0];
+  bar.innerHTML = '<div><span class="vt-new">NEU</span><b>Vertrieb:</b> ' + esc(n.firma) + ' <span style="color:var(--ink-soft)">· ' + esc(vtAgo(n.erstellt_am)) + ' · von ' + esc(vtFirst(n.erstellt_von)) + (fresh.length > 1 ? ' · +' + (fresh.length - 1) + ' weitere' + (fresh.length > 2 ? '' : 'r') : '') + '</span></div><span style="font-weight:700;color:var(--green-dark);white-space:nowrap">Zum Eintrag &rarr;</span>';
+  bar.classList.remove('hidden');
+}
+function openVertrieb(){ vtSetSeen(); document.getElementById('vtNotice').classList.add('hidden'); renderVertrieb(); }
+function setVtView(v){ vtView = v; renderVertrieb(); }
+function setVtSearch(v){ vtSearch = v; renderVertriebList(); }
+
+function renderVertrieb(){
+  const isAdmin = currentUser && currentUser.role === 'admin';
+  document.getElementById('vtForm').classList.toggle('hidden', !isAdmin);
+  if (isAdmin){
+    const sel = document.getElementById('vtWer');
+    if (!sel.options.length) sel.innerHTML = '<option value="">Alle</option>' + allProfiles.filter(p => p.status !== 'pending' && p.role !== 'admin').map(p => '<option value="' + esc(p.id) + '">' + esc(p.name) + '</option>').join('');
+  }
+  const cnt = { offen: 0, bearbeitet: 0, archiv: 0 };
+  vtItems.forEach(i => { if (i.status === 'offen') cnt.offen++; else if (vtIsArchived(i)) cnt.archiv++; else cnt.bearbeitet++; });
+  const tabs = [['offen','Offen'],['bearbeitet','Bearbeitet'],['archiv','Archiv']];
+  document.getElementById('vtSeg').innerHTML = tabs.map(t => '<button class="' + (vtView === t[0] ? 'active' : '') + '" onclick="setVtView(\'' + t[0] + '\')">' + t[1] + ' (' + cnt[t[0]] + ')</button>').join('')
+    + (vtView === 'archiv' ? '<input type="search" id="vtSearchInp" placeholder="Im Archiv suchen …" value="' + esc(vtSearch) + '" oninput="setVtSearch(this.value)">' : '');
+  renderVertriebList();
+}
+function vtCard(it){
+  const isAdmin = currentUser.role === 'admin';
+  const links = (it.links || []).map(vtLinkObj).filter(Boolean).map(l => '<a href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + '</a>').join(' &nbsp;·&nbsp; ');
+  const who = it.zustaendig ? vtFirst(it.zustaendig) : 'Alle';
+  const del = isAdmin ? ' <button class="vt-btn ghost small" onclick="deleteVertriebItem(\'' + esc(it.id) + '\')">Löschen</button>' : '';
+  if (it.status === 'offen'){
+    return '<div class="vt-card"><div class="top"><div class="firma">' + esc(it.firma) + '</div><span class="vt-pill">' + esc(who) + '</span></div>'
+      + '<div class="txt">' + esc(it.hinweis) + '</div>'
+      + '<div class="row"><div>' + links + '</div><div style="display:flex;gap:6px;align-items:center">' + del + '<button class="vt-btn" onclick="openVtModal(\'' + esc(it.id) + '\')">Bearbeitet melden</button></div></div>'
+      + '<div class="meta">Angelegt von ' + esc(vtFirst(it.erstellt_von)) + ' · ' + esc(vtDate(it.erstellt_am)) + '</div></div>';
+  }
+  const left = Math.max(0, Math.ceil(VT_DAYS - vtDaysSince(it.bearbeitet_am)));
+  const pill = vtIsArchived(it) ? '<span class="vt-pill">Archiv</span>' : '<span class="vt-pill warm">noch ' + left + (left === 1 ? ' Tag' : ' Tage') + ' sichtbar</span>';
+  return '<div class="vt-card done"><div class="top"><div class="firma">' + esc(it.firma) + '</div>' + pill + '</div>'
+    + '<div class="txt" style="color:var(--ink-soft)">' + esc(it.hinweis) + '</div>'
+    + '<div class="txt">&bdquo;' + esc(it.notiz || '') + '&ldquo;</div>'
+    + '<div class="row"><div>' + links + '</div><div style="display:flex;gap:6px;align-items:center">' + del + '<button class="vt-btn ghost" onclick="reopenVertriebItem(\'' + esc(it.id) + '\')">' + (vtIsArchived(it) ? 'Wieder öffnen' : 'Zurück nach Offen') + '</button></div></div>'
+    + '<div class="meta">Bearbeitet von ' + esc(vtFirst(it.bearbeitet_von)) + ' · ' + esc(vtDate(it.bearbeitet_am)) + '</div></div>';
+}
+function renderVertriebList(){
+  const body = document.getElementById('vtBody');
+  if (!vtReady){ body.innerHTML = '<p class="save-hint">Der Vertriebsbereich ist noch nicht eingerichtet (Datenbank-Tabelle fehlt). Bitte Admin kontaktieren.</p>'; return; }
+  let list;
+  if (vtView === 'offen') list = vtItems.filter(i => i.status === 'offen');
+  else if (vtView === 'bearbeitet') list = vtItems.filter(i => i.status === 'bearbeitet' && !vtIsArchived(i));
+  else {
+    list = vtItems.filter(vtIsArchived);
+    const q = vtSearch.trim().toLowerCase();
+    if (q) list = list.filter(i => [i.firma, i.hinweis, i.notiz].join(' ').toLowerCase().includes(q));
+  }
+  if (vtView !== 'offen') list = list.slice().sort((a, b) => String(b.bearbeitet_am).localeCompare(String(a.bearbeitet_am)));
+  body.innerHTML = list.length ? list.map(vtCard).join('') : '<p class="save-hint">' + (vtView === 'offen' ? 'Nichts offen. Gute Arbeit!' : vtView === 'bearbeitet' ? 'Noch nichts bearbeitet.' : 'Keine Treffer im Archiv.') + '</p>';
+}
+
+async function saveVertriebItem(){
+  const err = document.getElementById('vtFormError'); err.textContent = '';
+  const firma = document.getElementById('vtFirma').value.trim();
+  const hinweis = document.getElementById('vtHinweis').value.trim();
+  const links = document.getElementById('vtLinks').value.split('\n').map(vtLinkObj).filter(Boolean).map(l => l.url);
+  const wer = document.getElementById('vtWer').value || null;
+  if (!firma || !hinweis){ err.textContent = 'Bitte Firma und Hinweis ausfüllen.'; return; }
+  const { error } = await sb.from('vertrieb_items').insert({ firma, hinweis, links, zustaendig: wer });
+  if (error){ err.textContent = 'Speichern fehlgeschlagen: ' + error.message; return; }
+  ['vtFirma','vtHinweis','vtLinks'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('vtForm').open = false;
+  await loadVertrieb();
+}
+function openVtModal(id){
+  const it = vtItems.find(x => x.id === id); if (!it) return;
+  vtMarkId = id;
+  document.getElementById('vtModalFirma').textContent = it.firma;
+  document.getElementById('vtNote').value = '';
+  vtNoteChanged();
+  document.getElementById('vtModal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('vtNote').focus(), 50);
+}
+function closeVtModal(){ document.getElementById('vtModal').classList.add('hidden'); vtMarkId = null; }
+function vtNoteChanged(){
+  const ok = document.getElementById('vtNote').value.trim().length >= 8;
+  const b = document.getElementById('vtSaveBtn'); b.disabled = !ok; b.style.opacity = ok ? '1' : '.5';
+}
+async function confirmVtDone(){
+  const note = document.getElementById('vtNote').value.trim();
+  if (!vtMarkId || note.length < 8) return;
+  const { error } = await sb.from('vertrieb_items').update({ status: 'bearbeitet', notiz: note }).eq('id', vtMarkId);
+  if (error){ alert('Speichern fehlgeschlagen: ' + error.message); return; }
+  closeVtModal();
+  await loadVertrieb();
+}
+async function reopenVertriebItem(id){
+  const { error } = await sb.from('vertrieb_items').update({ status: 'offen' }).eq('id', id);
+  if (error){ alert('Fehlgeschlagen: ' + error.message); return; }
+  await loadVertrieb();
+}
+async function deleteVertriebItem(id){
+  if (!confirm('Eintrag wirklich löschen?')) return;
+  const { error } = await sb.from('vertrieb_items').delete().eq('id', id);
+  if (error){ alert('Löschen fehlgeschlagen: ' + error.message); return; }
+  await loadVertrieb();
+}
+async function startVertriebLive(){
+  await loadVertrieb();
+  if (vtChannel) return;
+  vtChannel = sb.channel('vertrieb-items').on('postgres_changes', { event:'*', schema:'public', table:'vertrieb_items' }, () => loadVertrieb()).subscribe();
+  setInterval(loadVertrieb, 60000);
+}
 
 /* ---------- Init ---------- */
 (async function init(){
