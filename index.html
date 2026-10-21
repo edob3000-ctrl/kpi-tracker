@@ -198,6 +198,9 @@
   .strip-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
   .strip-me{background:var(--green-pale);color:var(--green-dark);font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;}
   .strip-link{font-size:14px;font-weight:700;color:var(--green-dark);}
+  .stage-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .stage-chip{background:#fff;border:2px solid var(--green-dark);color:var(--green-dark);border-radius:999px;padding:10px 20px;min-height:44px;font-size:14px;font-weight:700;cursor:pointer;}
+  .stage-chip.active{background:var(--green-dark);color:#fff;}
   @media(max-width:560px){
     .stage-strip{padding:12px 14px;gap:10px 12px;}
     .strip-label{order:1;flex:1;}
@@ -292,7 +295,8 @@
     <!-- TAGESBÜHNE -->
     <div id="tab-stage" class="hidden">
       <h2 class="section-title">Wochenbühne</h2>
-      <p class="section-sub">Die Top 3 der Woche bei VT-Beteiligungen, live. Es zählt, was seit Montag erfasst wurde.</p>
+      <p class="section-sub">Die Top 3 der Woche, live. Gewertet wird nach Zielerreichung in Prozent, es zählt, was seit Montag erfasst wurde.</p>
+      <div id="stageChips" class="stage-chips"></div>
       <div id="stageBody"></div>
     </div>
 
@@ -1467,57 +1471,103 @@ function avatarHtml(p){
 }
 const CROWN_SVG = '<svg width="34" height="26" viewBox="0 0 34 26" role="img" aria-label="Platz 1"><path d="M2 22 L5 6 L12 14 L17 3 L22 14 L29 6 L32 22 Z" fill="#F48D40"></path></svg>';
 
+let stageView = 'total';
+function setStageView(v){ stageView = v; renderStage(); }
+
+async function fetchAllRows(build){
+  const rows = []; let from = 0;
+  for (;;){
+    const { data, error } = await build().order('id').range(from, from + 999);
+    if (error || !data) break;
+    rows.push(...data);
+    if (data.length < 1000) break;
+    from += 1000;
+  }
+  return rows;
+}
+
 async function renderStage(){
   if (!currentUser || stageBusy) return;
   const body = document.getElementById('stageBody');
-  const vt = allKpis.find(k => k.code === STAGE_KPI_CODE);
-  if (!vt){ body.innerHTML = '<p class="save-hint">KPI „VT“ wurde nicht gefunden.</p>'; return; }
+  const chipsBox = document.getElementById('stageChips');
   stageBusy = true;
   try {
     const prevWeek = addDaysISO(currentWeekStart, -7);
-    const [recentRes, targets, weekSums, prevSums] = await Promise.all([
-      sb.from('kpi_entries').select('user_id,wert,erfasst_am').eq('kpi_id', vt.id)
-        .eq('woche', currentWeekStart),
+    const [entries, targets, prevSums] = await Promise.all([
+      fetchAllRows(() => sb.from('kpi_entries').select('kpi_id,user_id,wert,erfasst_am').eq('woche', currentWeekStart)),
       getTargetsMap(),
-      getEntrySumsMap(currentWeekStart),
       getEntrySumsMap(prevWeek)
     ]);
 
-    const people = allProfiles.filter(p => p.status !== 'pending' && p.role !== 'admin'
-      && (vt.gilt_fuer === 'ALLE' || vt.gilt_fuer === p.unit));
-
-    // VT der laufenden Woche (ab Montag) pro Person; bei Gleichstand gewinnt, wer den Stand zuerst erreicht hat
-    const weekMap = {};
-    (recentRes.data || []).forEach(e => {
-      const m = weekMap[e.user_id] = weekMap[e.user_id] || { v:0, ts:0 };
-      m.v += Number(e.wert);
-      m.ts = Math.max(m.ts, e.erfasst_am ? new Date(e.erfasst_am).getTime() : 0);
+    const people = allProfiles.filter(p => p.status !== 'pending' && p.role !== 'admin');
+    const sums = {}, tsKpi = {}, tsUser = {};
+    entries.forEach(e => {
+      const k = e.kpi_id + '_' + e.user_id;
+      const t = e.erfasst_am ? new Date(e.erfasst_am).getTime() : 0;
+      sums[k] = (sums[k] || 0) + Number(e.wert);
+      tsKpi[k] = Math.max(tsKpi[k] || 0, t);
+      tsUser[e.user_id] = Math.max(tsUser[e.user_id] || 0, t);
     });
-    const ranking = people
-      .map(p => ({ p, v: (weekMap[p.id] || {}).v || 0, ts: (weekMap[p.id] || {}).ts || 0 }))
-      .filter(r => r.v > 0)
-      .sort((a, b) => b.v - a.v || a.ts - b.ts);
 
-    const weekOf = p => weekSums[vt.id + '_' + p.id] || 0;
-    const sollOf = p => Number((targets[vt.id + '_' + p.id] || {}).soll || 0);
+    const vtK = allKpis.find(k => k.code === STAGE_KPI_CODE);
+    const decK = allKpis.find(isDec);
+    const VIEWS = { total: { label:'Gesamt', title:'Gesamtbewertung', sub:'Ø Zielerreichung aller KPIs, je KPI maximal 100 %' } };
+    if (vtK)  VIEWS.vt  = { label:'VT', title:'VT-Beteiligungen', sub:'Zielerreichung in Prozent', kpi: vtK, unit:'VT' };
+    if (decK) VIEWS.dec = { label:'Decider-Calls', title:'Decider-Calls', sub:'Zielerreichung in Prozent', kpi: decK, unit:'Calls' };
+    if (!VIEWS[stageView]) stageView = 'total';
+    const view = VIEWS[stageView];
+
+    const sollOf = (p, k) => Number((targets[k.id + '_' + p.id] || {}).soll || 0);
+    const relevantFor = p => allKpis.filter(k => k.gilt_fuer === 'ALLE' || k.gilt_fuer === p.unit);
+    function valueFor(viewId, p, sumsMap){
+      if (viewId === 'total'){
+        const pcts = [];
+        relevantFor(p).forEach(k => { const s = sollOf(p, k); if (s > 0) pcts.push((sumsMap[k.id + '_' + p.id] || 0) / s * 100); });
+        if (!pcts.length) return null;
+        return { pct: pcts.reduce((a, x) => a + Math.min(100, x), 0) / pcts.length, tie: pcts.reduce((a, x) => a + x, 0) / pcts.length };
+      }
+      const k = VIEWS[viewId].kpi;
+      if (!(k.gilt_fuer === 'ALLE' || k.gilt_fuer === p.unit)) return null;
+      const s = sollOf(p, k); if (s <= 0) return null;
+      const ist = sumsMap[k.id + '_' + p.id] || 0;
+      return { pct: ist / s * 100, tie: ist, ist, soll: s };
+    }
+    function rankFor(viewId){
+      return people.map(p => {
+        const v = valueFor(viewId, p, sums);
+        if (!v) return null;
+        const ts = viewId === 'total' ? (tsUser[p.id] || 0) : (tsKpi[VIEWS[viewId].kpi.id + '_' + p.id] || 0);
+        return { p, ...v, ts };
+      }).filter(r => r && r.pct > 0).sort((a, b) => b.pct - a.pct || b.tie - a.tie || a.ts - b.ts);
+    }
+    const firstName = p => esc(String(p.name || '').trim().split(/\s+/)[0]);
+    const pctTxt = r => Math.round(r.pct) + ' %';
+
+    const totalRanking = rankFor('total');
+    const ranking = stageView === 'total' ? totalRanking : rankFor(stageView);
+    const me = people.find(p => p.id === currentUser.id);
     const timeLabel = new Date().toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit', timeZone:'Europe/Berlin' });
     const weekLabel = fmtWeekLabel(currentWeekStart);
 
-    // Podium (Reihenfolge links nach rechts: 2, 1, 3)
+    // Auswahl
+    chipsBox.innerHTML = Object.keys(VIEWS).map(id =>
+      '<button class="stage-chip' + (id === stageView ? ' active' : '') + '" onclick="setStageView(\'' + id + '\')">' + esc(VIEWS[id].label) + '</button>').join('');
+
+    // Podium (links nach rechts: 2, 1, 3)
     const col = (r, rank) => `
       <div class="podium-col r${rank}">
         <div class="podium-crown">${rank === 1 ? CROWN_SVG : ''}</div>
         ${avatarHtml(r.p)}
-        <div class="podium-name">${esc(String(r.p.name || '').trim().split(/\s+/)[0])}</div>
+        <div class="podium-name">${firstName(r.p)}</div>
         <div class="podium-bar">
           <div class="rank">${rank}</div>
-          <div class="val">${r.v}</div>
-          <div class="unit">VT</div>
+          <div class="val">${pctTxt(r)}</div>
+          <div class="unit">${stageView === 'total' ? 'Ø Ziel' : r.ist + ' / ' + r.soll + ' ' + view.unit}</div>
         </div>
       </div>`;
     let podiumHtml;
     if (!ranking.length){
-      podiumHtml = '<div class="stage-empty">Diese Woche noch kein VT erfasst. Wer holt den ersten?</div>';
+      podiumHtml = '<div class="stage-empty">Diese Woche noch nichts erfasst. Wer legt los?</div>';
     } else {
       const slots = [[ranking[1], 2], [ranking[0], 1], [ranking[2], 3]].filter(s => s[0]);
       podiumHtml = '<div class="podium">' + slots.map(s => col(s[0], s[1])).join('') + '</div>';
@@ -1525,71 +1575,72 @@ async function renderStage(){
 
     // Dein Platz (nur für dich sichtbar)
     let meCard = '';
-    const me = people.find(p => p.id === currentUser.id);
     if (me){
+      const mine = valueFor(stageView, me, sums);
       const idx = ranking.findIndex(r => r.p.id === me.id);
       let big, sub;
-      if (idx === -1){
-        big = 'Noch kein VT';
-        sub = ranking.length < 3 ? 'Das Podium hat noch freie Plätze.' : 'Dein erster VT bringt dich ins Rennen.';
-      } else if (idx < 3){
-        big = 'Platz ' + (idx + 1);
-        sub = 'Du stehst auf dem Podium.';
-      } else {
-        big = 'Platz ' + (idx + 1);
-        const need = ranking[2].v - ranking[idx].v + 1;
-        sub = 'Noch ' + need + ' VT bis aufs Podium.';
-      }
-      const w = weekOf(me), s = sollOf(me);
-      const pct = s > 0 ? Math.min(100, Math.round(w / s * 100)) : (w > 0 ? 100 : 0);
+      if (!mine){ big = 'Keine Wertung'; sub = 'Für dich ist hier kein Wochenziel hinterlegt.'; }
+      else if (idx === -1){ big = 'Noch nichts'; sub = ranking.length < 3 ? 'Das Podium hat noch freie Plätze.' : 'Dein erster Eintrag bringt dich ins Rennen.'; }
+      else if (idx < 3){ big = 'Platz ' + (idx + 1); sub = 'Du stehst auf dem Podium.'; }
+      else { big = 'Platz ' + (idx + 1); sub = 'Noch ' + Math.max(1, Math.ceil(ranking[2].pct - ranking[idx].pct)) + ' Prozentpunkte bis aufs Podium.'; }
+      const mp = mine ? Math.round(mine.pct) : 0;
       meCard = `
         <div class="stage-mini dark">
           <div class="lbl">Dein Platz · nur für dich sichtbar</div>
           <div class="big">${esc(big)}</div>
           <div class="sub">${esc(sub)}</div>
-          <div class="stage-bar"><div style="width:${pct}%"></div></div>
-          <div class="sub" style="opacity:.75;font-size:13px;">Diese Woche: ${w} von ${s} VT</div>
+          <div class="stage-bar"><div style="width:${Math.min(100, mp)}%"></div></div>
+          <div class="sub" style="opacity:.75;font-size:13px;">Zielerreichung diese Woche: ${mp} %</div>
         </div>`;
     }
 
-    // Team-Ziel der Woche = Summe aller Wochenziele
-    const teamIst = people.reduce((a, p) => a + weekOf(p), 0);
-    const teamSoll = people.reduce((a, p) => a + sollOf(p), 0);
-    const teamPct = teamSoll > 0 ? Math.min(100, Math.round(teamIst / teamSoll * 100)) : 0;
+    // Team-Karte
+    let teamBig, teamSub, teamPct;
+    if (stageView === 'total'){
+      const vals = people.map(p => valueFor('total', p, sums)).filter(Boolean);
+      teamPct = vals.length ? Math.round(vals.reduce((a, v) => a + v.pct, 0) / vals.length) : 0;
+      teamBig = teamPct + ' %'; teamSub = 'Ø Zielerreichung im Team';
+    } else {
+      let ist = 0, soll = 0;
+      people.forEach(p => { const v = valueFor(stageView, p, sums); if (v){ ist += v.ist; soll += v.soll; } });
+      teamBig = ist + ' / ' + soll; teamSub = 'Team ' + view.unit + ' diese Woche';
+      teamPct = soll > 0 ? Math.round(ist / soll * 100) : 0;
+    }
     const teamCard = `
       <div class="stage-mini">
         <div class="lbl">Team-Ziel · Woche</div>
-        <div class="big">${teamIst} / ${teamSoll}</div>
-        <div class="sub">Team-VT diese Woche</div>
-        <div class="stage-bar"><div style="width:${teamPct}%"></div></div>
+        <div class="big">${esc(teamBig)}</div>
+        <div class="sub">${esc(teamSub)}</div>
+        <div class="stage-bar"><div style="width:${Math.min(100, teamPct)}%"></div></div>
       </div>`;
 
-    // Comeback: größter VT-Zuwachs zur Vorwoche
+    // Comeback: größter Zuwachs an Prozentpunkten zur Vorwoche
     let best = null;
     people.forEach(p => {
-      const gain = weekOf(p) - (prevSums[vt.id + '_' + p.id] || 0);
+      const cur = valueFor(stageView, p, sums), prev = valueFor(stageView, p, prevSums);
+      if (!cur) return;
+      const gain = Math.round(cur.pct - (prev ? prev.pct : 0));
       if (gain >= 1 && (!best || gain > best.gain)) best = { p, gain };
     });
     const comebackCard = best ? `
       <div class="stage-mini">
         <div class="lbl">Comeback der Woche</div>
-        <div class="big" style="font-size:28px;">${esc(String(best.p.name || '').trim().split(/\s+/)[0])}</div>
-        <div class="sub">+${best.gain} VT zur Vorwoche</div>
+        <div class="big" style="font-size:28px;">${firstName(best.p)}</div>
+        <div class="sub">+${best.gain} Prozentpunkte zur Vorwoche</div>
       </div>` : '';
 
-    // Podium-Streifen oben in "Meine KPIs"
+    // Streifen oben in "Meine KPIs": immer die Gesamtbewertung
     const strip = document.getElementById('stageStrip');
     if (strip){
-      const firstName = r => esc(String(r.p.name || '').trim().split(/\s+/)[0]);
-      const items = ranking.length
-        ? ranking.slice(0, 3).map((r, i) => `<div class="strip-item r${i + 1}"><span class="strip-rank">${i + 1}</span>${avatarHtml(r.p)}<div class="strip-txt"><b>${firstName(r)}</b><span>${r.v} VT</span></div></div>`).join('')
-        : '<div class="strip-empty">Diese Woche noch kein VT. Wer holt den ersten?</div>';
+      const items = totalRanking.length
+        ? totalRanking.slice(0, 3).map((r, i) => `<div class="strip-item r${i + 1}"><span class="strip-rank">${i + 1}</span>${avatarHtml(r.p)}<div class="strip-txt"><b>${firstName(r.p)}</b><span>${pctTxt(r)}</span></div></div>`).join('')
+        : '<div class="strip-empty">Diese Woche noch nichts erfasst. Wer legt los?</div>';
       let meTxt = '';
       if (me){
-        const i = ranking.findIndex(r => r.p.id === me.id);
-        meTxt = i === -1 ? 'Du: noch kein VT' : 'Du: Platz ' + (i + 1);
+        const i = totalRanking.findIndex(r => r.p.id === me.id);
+        meTxt = i === -1 ? 'Du: noch nichts erfasst' : 'Du: Platz ' + (i + 1);
       }
-      strip.innerHTML = '<div class="strip-label"><small>Wochenbühne</small><b>VT diese Woche</b></div>'
+      strip.innerHTML = '<div class="strip-label"><small>Wochenbühne</small><b>Gesamt diese Woche</b></div>'
         + '<div class="strip-items">' + items + '</div>'
         + '<div class="strip-right">' + (meTxt ? '<span class="strip-me">' + esc(meTxt) + '</span>' : '')
         + '<span class="strip-link">Zur Wochenbühne &rarr;</span></div>';
@@ -1598,9 +1649,10 @@ async function renderStage(){
     body.innerHTML = `
       <div class="stage-card">
         <div class="stage-head">
-          <h3>VT-Beteiligungen · ${esc(weekLabel)}</h3>
+          <h3>${esc(view.title)} · ${esc(weekLabel)}</h3>
           <span class="stage-live"><i></i>Live · Stand ${esc(timeLabel)}</span>
         </div>
+        <div class="sub" style="font-size:13px;color:var(--ink-soft);margin-top:4px;">${esc(view.sub)}</div>
         ${podiumHtml}
       </div>
       <div class="stage-grid">${meCard}${teamCard}${comebackCard}</div>`;
@@ -1626,6 +1678,8 @@ function startStageLive(){
 // Eigene Klicks sofort auch auf der Bühne zeigen
 const _addPlusOneOrig = addPlusOne;
 addPlusOne = async function(kpiId){ await _addPlusOneOrig(kpiId); renderStage(); };
+const _addFtEntryOrig = addFtEntry;
+addFtEntry = async function(kategorie){ await _addFtEntryOrig(kategorie); renderStage(); };
 
 /* ---------- Init ---------- */
 (async function init(){
