@@ -242,6 +242,94 @@
     .strip-txt span{font-size:12px;}
     .strip-link{display:none;}
   }
+  /* ---------- Mein Cockpit ---------- */
+  .ck-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px;}
+  .ck-lock{display:inline-flex;align-items:center;gap:7px;background:var(--green-pale);color:var(--green-dark);padding:7px 12px;border-radius:999px;font-size:12.5px;font-weight:600;}
+  .ck-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .ck-controls select{padding:8px;border:1px solid var(--border);border-radius:6px;min-width:180px;font-size:13px;background:#fff;}
+  .ck-year{font-weight:700;min-width:44px;text-align:center;}
+  .ck-stand{background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:12.5px;color:var(--ink-soft);margin-bottom:18px;line-height:1.45;}
+  .ck-tiles{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:18px;}
+  .ck-tile{flex:1 1 210px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;}
+  .ck-tile.dark{background:var(--green-dark);color:#fff;border-color:var(--green-dark);}
+  .ck-tile .lbl{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+  .ck-tile.dark .lbl,.ck-tile.dark .sub{color:#c9d6cd;}
+  .ck-tile .big{font-size:28px;font-weight:800;margin-top:8px;}
+  .ck-tile .sub{font-size:12.5px;color:var(--ink-soft);margin-top:6px;line-height:1.4;}
+  .ck-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:18px;}
+  .ck-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;}
+  .ck-row .ck-card{margin-bottom:0;flex:1 1 320px;min-width:0;}
+  .ck-row .ck-card.wide{flex:3 1 420px;}
+  .ck-card h3{margin:0;font-size:15px;color:var(--green-dark);}
+  .ck-cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+  .ck-cardhead .meta{font-size:12.5px;color:var(--ink-soft);}
+  .ck-big{font-size:26px;font-weight:800;margin:12px 0 4px;}
+  .ck-sub{font-size:13px;color:var(--ink-soft);margin-bottom:16px;line-height:1.45;}
+  .ck-sub strong{color:var(--ink);}
+  .ck-pill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;display:inline-block;}
+  .ck-pill.warn{background:var(--warn-bg);color:#7a5810;}
+  .ck-pill.ok{background:var(--ok-bg);color:var(--ok-fg);}
+  .ck-pill.info{background:#dbe6f5;color:#2a5090;}
+  .ck-pill.grey{background:var(--green-pale);color:var(--ink-soft);}
+  .ck-bar{position:relative;height:16px;border-radius:20px;overflow:hidden;display:flex;background:var(--border);}
+  .ck-bar .z1{background:var(--border);} .ck-bar .z2{background:#dcefdf;} .ck-bar .z3{background:#b9dcc2;}
+  .ck-bar .fill{position:absolute;left:0;top:0;bottom:0;background:var(--green-dark);border-radius:20px;}
+  .ck-bar .mark{position:absolute;top:0;bottom:0;width:3px;background:#F48D40;}
+  .ck-scale{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin-top:8px;font-size:12px;color:var(--ink-soft);}
+  .ck-scale span{white-space:nowrap;}
+  .tabs{overflow-x:auto;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .ck-scale strong{color:var(--ink);}
+  .ck-note{background:var(--green-pale);border-radius:10px;padding:11px 14px;font-size:13px;line-height:1.45;margin-top:16px;}
+  .ck-foot{font-size:12px;color:var(--ink-soft);border-top:1px solid var(--border);padding-top:12px;margin-top:12px;line-height:1.45;}
+  .ck-blocks{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;}
+  .ck-block{flex:1 1 150px;border:1px solid var(--border);border-radius:12px;padding:13px;}
+  .ck-block.bad{background:#fdf7f6;}
+  .ck-block.now{border:2px solid var(--green-dark);padding:12px;}
+  .ck-block.future{opacity:.55;}
+  .ck-block .t{font-size:12px;color:var(--ink-soft);font-weight:600;}
+  .ck-block.now .t{color:var(--green-dark);font-weight:700;}
+  .ck-block .m{font-size:17px;font-weight:700;margin-top:6px;}
+  .ck-block .p{font-size:13px;font-weight:700;margin-top:4px;}
+  .ck-block .n{font-size:11.5px;color:var(--ink-soft);margin-top:6px;line-height:1.4;}
+  .ck-block .n a{color:var(--green-dark);font-weight:700;}
+  .ck-hints{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;}
+  .ck-hint{flex:1 1 300px;display:flex;gap:12px;padding:12px;border-radius:10px;background:#f4f7f4;font-size:13px;line-height:1.45;}
+  .ck-hint.warn{background:#fdf8ea;}
+  .ck-hint .ic{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--ok-bg);color:var(--green-dark);display:flex;align-items:center;justify-content:center;}
+  .ck-hint.warn .ic{background:var(--warn-bg);color:#7a5810;}
+  .ck-tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px;margin-top:12px;}
+  .ck-tablewrap table.kpi-table{border:none;border-radius:0;min-width:820px;}
+  table.kpi-table td.num, table.kpi-table th.num{text-align:right;white-space:nowrap;}
+  table.kpi-table td.soft{color:var(--ink-soft);}
+  .ck-legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:8px;font-size:12.5px;}
+  .ck-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;}
+  .ck-funnel{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+  .ck-funnel div{flex:1 1 120px;background:var(--cream);border-radius:12px;padding:14px;text-align:center;}
+  .ck-funnel div.dark{background:var(--green-dark);color:#fff;}
+  .ck-funnel b{display:block;font-size:22px;}
+  .ck-funnel span{font-size:12.5px;color:var(--ink-soft);}
+  .ck-funnel div.dark span{color:#c9d6cd;}
+  .ck-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+  .ck-chips span{background:var(--green-pale);color:var(--green-dark);padding:8px 14px;border-radius:999px;font-size:13px;}
+  .ck-empty{background:#fff;border:1px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--ink-soft);font-size:14px;line-height:1.5;}
+  .ck-adm h4{margin:20px 0 8px;font-size:14px;color:var(--green-dark);}
+  .ck-adm input[type=number],.ck-adm input[type=date],.ck-adm select{padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:#fff;}
+  .ck-adm input[type=number]{width:100px;}
+  .ck-adm .ck-rule input[type=number]{width:84px;}
+  .ck-btn-danger{background:var(--bad-fg);}
+  @media(max-width:560px){
+    .tabs button{white-space:nowrap;flex:0 0 auto;padding:10px 12px;}
+    .ck-tiles{gap:10px;}
+    .ck-tile{flex:1 1 calc(50% - 5px);padding:14px 16px;}
+    .ck-tile.dark{flex-basis:100%;}
+    .ck-blocks{gap:8px;} .ck-block{flex:1 1 calc(50% - 4px);min-width:0;padding:11px 12px;}
+    .ck-funnel{gap:8px;} .ck-funnel > div{flex:1 1 calc(33% - 6px);min-width:0;}
+    .ck-tile .lbl{font-size:11px;letter-spacing:.03em;}
+    .ck-tile .big{font-size:23px;} .ck-big{font-size:21px;}
+    .ck-card{padding:16px;}
+    .ck-controls select{min-width:0;flex:1 1 160px;}
+  }
 </style>
 </head>
 <body>
@@ -309,6 +397,7 @@
       <button data-tab="vertrieb" onclick="switchTab('vertrieb'); openVertrieb()">Vertrieb <span id="vtBadge" class="tab-badge hidden"></span></button>
       <button data-tab="team" onclick="switchTab('team')">Team-Übersicht</button>
       <button data-tab="period" onclick="switchTab('period'); renderPeriodView()">Monat / Jahr</button>
+      <button data-tab="cockpit" id="cockpitTabBtn" class="hidden" onclick="switchTab('cockpit'); renderCockpit()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-1px;margin-right:4px;"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Mein Cockpit</button>
       <button data-tab="week" id="weekTabBtn" class="hidden" onclick="switchTab('week'); renderWeekView()">Wochenübersicht</button>
       <button data-tab="admin" id="adminTabBtn" class="hidden" onclick="switchTab('admin')">Admin <span id="pendingBadge" class="hidden" style="background:var(--bad-fg);color:#fff;border-radius:20px;font-size:10.5px;padding:1px 7px;margin-left:4px;"></span></button>
     </div>
@@ -372,6 +461,24 @@
       <p class="save-hint">Soll = Wochenziel × Anzahl der Wochen (Montage) im Zeitraum. Gesamt = Mittelwert der KPI-Erfüllung (je KPI max. 100 %). Urlaub und Feiertage sind im Soll nicht herausgerechnet.</p>
     </div>
 
+    <!-- MEIN COCKPIT -->
+    <div id="tab-cockpit" class="hidden">
+      <div class="ck-head">
+        <div>
+          <h2 class="section-title">Mein Cockpit</h2>
+          <p class="section-sub" id="cockpitSub" style="margin:0;"></p>
+        </div>
+        <div class="ck-controls">
+          <span class="ck-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg><span id="cockpitLockTxt">Nur für dich sichtbar</span></span>
+          <select id="cockpitUser" class="hidden" onchange="renderCockpit()" aria-label="Berater wählen"></select>
+          <button class="add-btn" onclick="shiftCockpitYear(-1)" aria-label="Vorjahr">&larr;</button>
+          <span class="ck-year" id="cockpitYearLabel"></span>
+          <button class="add-btn" id="cockpitNextYear" onclick="shiftCockpitYear(1)" aria-label="Folgejahr">&rarr;</button>
+        </div>
+      </div>
+      <div id="cockpitBody"></div>
+    </div>
+
     <!-- ADMIN -->
     <!-- WOCHENÜBERSICHT (nur Admin) -->
     <div id="tab-week" class="hidden">
@@ -408,6 +515,40 @@
           <button class="add-btn" style="padding:10px;" onclick="createBerater()">Anlegen</button>
         </div>
         <div class="save-hint" id="createHint"></div>
+      </div>
+
+      <div class="card-block ck-adm" id="cockpitAdmin">
+        <h3>Cockpit-Verwaltung</h3>
+        <p class="section-sub" style="margin-bottom:4px;">Umsätze, Splitts und Provision je Berater. Die Zahlen kommen per Import aus dem Splitt-Lauf, gerechnet wird nach den Regeln unten. Jeder Berater sieht nur sein eigenes Cockpit.</p>
+
+        <h4>1. Zahlen importieren</h4>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;">
+          <label style="font-size:12px;color:var(--ink-soft);">Importdatei aus dem Splitt-Lauf (.json)<br>
+            <input type="file" id="ckImportFile" accept=".json,application/json" onchange="ckImportPreview()" style="margin-top:4px;"></label>
+          <button class="add-btn" id="ckImportBtn" style="padding:10px 14px;" disabled onclick="ckImportRun()">Importieren</button>
+        </div>
+        <div class="save-hint" id="ckImportHint"></div>
+        <div style="overflow-x:auto;margin-top:8px;"><table class="kpi-table" id="ckImportPreview"></table></div>
+        <div style="overflow-x:auto;margin-top:10px;"><table class="kpi-table" id="ckImportList"></table></div>
+
+        <h4>2. Stufen je Berater</h4>
+        <div style="overflow-x:auto;"><table class="kpi-table" id="ckStufenTable"></table></div>
+        <div class="save-hint" id="ckStufenHint"></div>
+
+        <h4>3. Block freigeben</h4>
+        <p class="section-sub" style="margin-bottom:10px;">Friert die Abrechnung eines Blocks ein. Danach ändert sie sich nicht mehr, auch nicht durch spätere Importe. Nur der Reihe nach möglich. Der Berater kann die Abrechnung als PDF laden.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;">
+          <label style="font-size:12px;color:var(--ink-soft);">Berater<br><select id="ckFreiUser" onchange="ckFreiPending=null; ckFreiRender()"></select></label>
+          <label style="font-size:12px;color:var(--ink-soft);">Jahr<br><select id="ckFreiYear" onchange="ckFreiPending=null; ckFreiRender()"></select></label>
+        </div>
+        <div id="ckFreiBody" style="margin-top:10px;"></div>
+
+        <details style="margin-top:20px;">
+          <summary style="cursor:pointer;font-weight:700;color:var(--green-dark);">4. Regeln des Bonusmodells</summary>
+          <p class="section-sub" style="margin:10px 0;">Änderungen gelten sofort für alle noch nicht freigegebenen Blöcke. Prozentwerte in %.</p>
+          <div style="overflow-x:auto;"><table class="kpi-table ck-rule" id="ckRegelnTable"></table></div>
+          <div class="save-hint" id="ckRegelnHint"></div>
+        </details>
       </div>
 
       <div class="card-block">
@@ -656,6 +797,7 @@ async function afterLogin(){
   currentWeekStart = fmtISO(mondayOf(new Date()));
   document.getElementById('weekLabel').textContent = fmtWeekLabel(currentWeekStart);
   await loadStaticData();
+  try { await initCockpit(); } catch(e){ console.warn('Cockpit', e); }
   await renderMine();
   await renderTeam();
   await checkFeierabendDone();
@@ -921,7 +1063,7 @@ function drawPdfTable(doc, rows, startY){
 /* ---------- Tabs ---------- */
 function switchTab(tab){
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
-  ['mine','stage','vertrieb','team','period','week','admin'].forEach(t=>{
+  ['mine','stage','vertrieb','team','period','cockpit','week','admin'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('hidden', t!==tab);
   });
 }
@@ -1476,6 +1618,7 @@ async function renderAdmin(){
   });
   html += '</tbody>';
   document.getElementById('adminTable').innerHTML = html;
+  try { await ckAdminRender(); } catch(e){ console.warn('Cockpit-Admin', e); }
 }
 
 async function saveTarget(input){
@@ -1890,6 +2033,811 @@ async function startVertriebLive(){
   if (vtChannel) return;
   vtChannel = sb.channel('vertrieb-items').on('postgres_changes', { event:'*', schema:'public', table:'vertrieb_items' }, () => loadVertrieb()).subscribe();
   setInterval(loadVertrieb, 60000);
+}
+
+/* =========================================================
+   MEIN COCKPIT – Umsätze, Splitts, Provision je Berater
+   Daten: cockpit_* Tabellen (Import aus dem Splitt-Lauf),
+   Rechnung: cockpit_bloecke() / cockpit_jahresbonus() in Supabase.
+   Jeder Berater sieht per RLS nur seine eigenen Zeilen.
+   ========================================================= */
+let cockpitYear = new Date().getFullYear();
+let cockpitBerater = [];   // cockpit_berater (Admin: alle, Berater: nur eigene Zeile)
+let cockpitRegeln = {};    // stufe -> Regeln
+let ckCache = null;        // zuletzt angezeigtes Cockpit (für PDF)
+let ckImportData = null;   // geprüfte Importdatei
+let ckFreiPending = null;  // Block, der auf Bestätigung wartet
+let ckFreiAbr = {};        // Admin: freigegebene Abrechnungen nach Block
+
+const CK_MONATE = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+const CK_BEREICH = { anue: 'ANÜ', interim: 'Interim', fest: 'Fest' };
+const CK_STUFEN = [['rookie','Rookie'],['junior','Junior'],['senior','Senior'],['partner','Partnerin']];
+
+function ckNum(v){ return Number(v) || 0; }
+function ckEur(v, dec){ const d = dec || 0; return ckNum(v).toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' €'; }
+function ckPct(x){ return (Math.round(ckNum(x) * 10000) / 100).toLocaleString('de-DE') + ' %'; }
+function ckDate(iso){ if (!iso) return ''; const s = String(iso); return new Date(s.length === 10 ? s + 'T00:00:00' : s).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' }); }
+function ckReadFile(f){
+  if (f.text) return f.text();
+  return new Promise((ok, fail) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = () => fail(r.error); r.readAsText(f, 'utf-8'); });
+}
+function ckMonYear(iso){ return new Date(String(iso) + 'T00:00:00').toLocaleDateString('de-DE', { month:'short', year:'numeric' }); }
+function ckIsAdmin(){ return !!currentUser && currentUser.role === 'admin'; }
+function ckProfile(id){ return allProfiles.find(p => p.id === id); }
+function ckDaysUntil(iso){ const t = new Date(); t.setHours(0,0,0,0); return Math.round((new Date(String(iso) + 'T00:00:00') - t) / 86400000); }
+function ckSum(arr, f){ return arr.reduce((a, x) => a + ckNum(f(x)), 0); }
+function ckIcon(kind){
+  const p = {
+    clock: '<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
+    warn:  '<path d="M12 9v4M12 17h.01"></path><path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path>',
+    card:  '<rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path>',
+    info:  '<circle cx="12" cy="12" r="9"></circle><path d="M12 8h.01M11 12h1v4h1"></path>',
+    swap:  '<path d="M4 12h16M14 6l6 6-6 6"></path>'
+  }[kind] || '';
+  return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
+}
+
+/* ---------- Laden & Reiter ---------- */
+async function initCockpit(){
+  const [{ data: rows }, { data: regeln }] = await Promise.all([
+    sb.from('cockpit_berater').select('user_id,stufe,eintritt'),
+    sb.from('cockpit_regeln').select('*')
+  ]);
+  cockpitBerater = rows || [];
+  cockpitRegeln = {};
+  (regeln || []).forEach(r => cockpitRegeln[r.stufe] = r);
+
+  const show = ckIsAdmin() || cockpitBerater.some(r => r.user_id === currentUser.id);
+  document.getElementById('cockpitTabBtn').classList.toggle('hidden', !show);
+
+  const sel = document.getElementById('cockpitUser');
+  if (ckIsAdmin()){
+    const prev = sel.value;
+    const opts = cockpitBerater.map(r => ({ r, p: ckProfile(r.user_id) })).filter(x => x.p)
+      .sort((a, b) => String(a.p.name).localeCompare(String(b.p.name), 'de'));
+    sel.innerHTML = opts.map(x => `<option value="${x.r.user_id}">${esc(x.p.name)}</option>`).join('');
+    if (prev && opts.some(x => x.r.user_id === prev)) sel.value = prev;
+    sel.classList.toggle('hidden', !opts.length);
+  }
+}
+
+function shiftCockpitYear(n){
+  const max = new Date().getFullYear();
+  cockpitYear = Math.min(max, cockpitYear + n);
+  renderCockpit();
+}
+
+async function ckLoadActivity(uid, y){
+  const start = y + '-01-01', end = (y + 1) + '-01-01';
+  const rows = await fetchAllRows(() => sb.from('kpi_entries').select('id,kpi_id,wert,woche')
+    .eq('user_id', uid).gte('woche', start).lt('woche', end));
+  const byCode = {}; let first = null;
+  rows.forEach(e => {
+    const k = allKpis.find(x => x.id === e.kpi_id);
+    if (!k) return;
+    const code = k.code === 'FT' ? 'DEC' : k.code;
+    byCode[code] = (byCode[code] || 0) + Number(e.wert);
+    if (!first || e.woche < first) first = e.woche;
+  });
+  return { byCode, first };
+}
+
+async function renderCockpit(){
+  const body = document.getElementById('cockpitBody');
+  const thisYear = new Date().getFullYear();
+  document.getElementById('cockpitYearLabel').textContent = cockpitYear;
+  document.getElementById('cockpitNextYear').disabled = cockpitYear >= thisYear;
+  const admin = ckIsAdmin();
+  document.getElementById('cockpitLockTxt').textContent = admin ? 'Admin-Ansicht' : 'Nur für dich sichtbar';
+  const uid = admin ? document.getElementById('cockpitUser').value : currentUser.id;
+  const row = cockpitBerater.find(r => r.user_id === uid);
+  const subEl = document.getElementById('cockpitSub');
+  if (!uid || !row){
+    subEl.textContent = '';
+    body.innerHTML = '<div class="ck-empty">' + (admin
+      ? 'Noch kein Berater mit Cockpit. Die Stufen legst du im Admin-Bereich unter „Cockpit-Verwaltung“ fest.'
+      : 'Für dich ist noch kein Cockpit eingerichtet.') + '</div>';
+    return;
+  }
+  body.innerHTML = '<div class="ck-empty">Lade dein Cockpit …</div>';
+  const y = cockpitYear;
+  const [bl, jb, pos, ein, raten, imp, abr, akt] = await Promise.all([
+    sb.rpc('cockpit_bloecke', { p_jahr: y, p_user: uid }),
+    sb.rpc('cockpit_jahresbonus', { p_jahr: y, p_user: uid }),
+    sb.from('cockpit_positionen').select('*').eq('user_id', uid).eq('jahr', y).order('monat'),
+    sb.from('cockpit_einsaetze').select('*').eq('user_id', uid).eq('jahr', y),
+    sb.from('cockpit_offene_raten').select('*').eq('user_id', uid).eq('jahr', y),
+    sb.from('cockpit_importe').select('stand,importiert_am').eq('jahr', y).order('id', { ascending: false }).limit(1),
+    sb.from('cockpit_abrechnungen').select('*').eq('user_id', uid).eq('jahr', y).order('block'),
+    ckLoadActivity(uid, y).catch(() => ({ byCode: {}, first: null }))
+  ]);
+  const bad = [bl, jb, pos, ein, raten, imp, abr].find(r => r && r.error);
+  if (bad){
+    body.innerHTML = '<div class="ck-empty">Das Cockpit konnte nicht geladen werden: ' + esc(bad.error.message) + '</div>';
+    return;
+  }
+  const p = ckProfile(uid) || { name: '?' };
+  const regel = cockpitRegeln[row.stufe] || { bonus_aktiv: false };
+  const d = {
+    uid, p, row, regel, y,
+    bloecke: (bl.data || []).map(b => ({ ...b, block: Number(b.block) })),
+    jb: (jb.data || [])[0] || null,
+    pos: pos.data || [], ein: ein.data || [], raten: raten.data || [],
+    imp: (imp.data || [])[0] || null, abr: abr.data || [], akt
+  };
+  ckCache = d;
+  subEl.textContent = (admin ? p.name + ' · ' : '') + (regel.bezeichnung || row.stufe)
+    + (regel.bonus_aktiv ? ' · Kostenschwelle ' + ckEur(regel.kostenschwelle) + ' je Block' : ' · Umsatz und Marge');
+  body.innerHTML = ckHtml(d);
+}
+
+/* ---------- Aufbau der Seite ---------- */
+function ckHtml(d){
+  const now = new Date();
+  const curYear = now.getFullYear();
+  const curBlock = d.y < curYear ? 7 : Math.ceil((now.getMonth() + 1) / 2);
+  const bonus = !!d.regel.bonus_aktiv;
+  let h = '';
+
+  h += '<div class="ck-stand">' + (d.imp
+    ? '<strong>Stand der Zahlen: ' + ckDate(d.imp.stand) + '.</strong> ANÜ und Interim zählen nach Leistungsmonat und kommen mit der Abrechnung im Folgemonat dazu, Festvermittlung zählt nach Rechnungsdatum.'
+    : 'Für ' + d.y + ' wurden noch keine Zahlen importiert.') + '</div>';
+  if (!d.pos.length && !d.ein.length && !d.raten.length){
+    return h + '<div class="ck-empty">Noch keine Splitts für ' + d.y + '.</div>';
+  }
+
+  h += ckTilesHtml(d, curBlock, bonus);
+  if (bonus){
+    const cards = ckCurrentBlockHtml(d, curBlock) + ckJahresbonusHtml(d);
+    if (cards) h += '<div class="ck-row">' + cards + '</div>';
+    h += ckBlocksHtml(d, curBlock);
+  } else {
+    h += ckMonthsHtml(d);
+  }
+  const hints = ckHints(d, curBlock);
+  if (hints.length){
+    h += '<div class="ck-card"><h3>Für dich zu tun</h3><div class="ck-hints">'
+      + hints.map(x => `<div class="ck-hint${x.warn ? ' warn' : ''}"><span class="ic">${ckIcon(x.icon)}</span><div><strong>${esc(x.t)}</strong><br>${esc(x.s)}</div></div>`).join('')
+      + '</div></div>';
+  }
+  h += ckRunningTableHtml(d, 'anue');
+  h += ckRunningTableHtml(d, 'interim');
+  h += ckFestTableHtml(d);
+  h += ckRolesHtml(d);
+  h += ckActivityHtml(d);
+  h += '<p class="save-hint">Quelle: Splitt-Übersicht (Stundenübersicht und Perm-Umsatzkalkulator). Provision nach Bonusmodell, Basis ist immer die Marge. Negative Margen zählen mit 0 €.</p>';
+  return h;
+}
+
+function ckTilesHtml(d, curBlock, bonus){
+  const anteil = ckSum(d.pos, x => x.anteil);
+  const per = {};
+  d.pos.forEach(x => per[x.bereich] = (per[x.bereich] || 0) + ckNum(x.anteil));
+  const parts = ['anue', 'interim', 'fest'].filter(b => per[b]).map(b => CK_BEREICH[b] + ' ' + ckEur(per[b]));
+  let h = '<section class="ck-tiles" aria-label="Kennzahlen">';
+  h += `<div class="ck-tile dark"><div class="lbl">${bonus ? 'Mein Anteil' : 'Marge-Anteil'} ${d.y}</div><div class="big">${ckEur(anteil)}</div><div class="sub">${esc(parts.join(' · ') || '–')}</div></div>`;
+
+  if (bonus){
+    const prov = ckSum(d.bloecke, b => b.provision);
+    const frei = ckSum(d.bloecke.filter(b => b.freigegeben), b => b.provision);
+    h += `<div class="ck-tile"><div class="lbl">Provision bisher</div><div class="big" style="color:var(--ok-fg)">${ckEur(prov)}</div><div class="sub">${frei ? 'davon freigegeben ' + ckEur(frei) : 'vorläufig, noch kein Block freigegeben'}</div></div>`;
+    if (d.regel.mit_cashcarry){
+      const b = curBlock <= 6 ? d.bloecke.find(x => x.block === curBlock) : d.bloecke.find(x => x.block === 6);
+      const cc = b ? ckNum(curBlock <= 6 ? b.cashcarry_start : b.cashcarry_ende) : 0;
+      h += `<div class="ck-tile"><div class="lbl">Cashcarry · Verlustvortrag</div><div class="big"${cc > 0 ? ' style="color:var(--bad-fg)"' : ''}>${ckEur(cc)}</div><div class="sub">${cc > 0 ? (curBlock <= 6 ? 'geht in Block ' + curBlock : 'zum Jahresende') : 'kein Vortrag offen'}</div></div>`;
+    }
+  } else {
+    const ums = d.pos.filter(x => x.umsatz_netto != null);
+    if (ums.length){
+      h += `<div class="ck-tile"><div class="lbl">Umsatz der Geschäfte</div><div class="big">${ckEur(ckSum(ums, x => x.umsatz_netto))}</div><div class="sub">gesamt, vor Splitt</div></div>`;
+    }
+    const mg = d.pos.filter(x => x.marge_gesamt != null);
+    if (mg.length){
+      h += `<div class="ck-tile"><div class="lbl">Marge der Geschäfte</div><div class="big">${ckEur(ckSum(mg, x => x.marge_gesamt))}</div><div class="sub">gesamt, vor Splitt</div></div>`;
+    }
+  }
+  const offen = ckSum(d.raten, r => r.offen_gesamt);
+  if (offen > 0){
+    h += `<div class="ck-tile"><div class="lbl">Offene Raten</div><div class="big">${ckEur(offen)}</div><div class="sub">${d.raten.length} Kandidat${d.raten.length === 1 ? '' : 'en'}, noch nicht gestellt</div></div>`;
+  }
+  return h + '</section>';
+}
+
+function ckCurrentBlockHtml(d, curBlock){
+  if (curBlock > 6) return '';
+  const b = d.bloecke.find(x => x.block === curBlock);
+  if (!b) return '';
+  const r = d.regel;
+  const rookie = d.row.stufe === 'rookie';
+  const cc = ckNum(b.cashcarry_start);
+  const schwelle = ckNum(r.kostenschwelle) + cc;
+  const grenze = ckNum(r.provision_grenze);
+  const marge = ckNum(b.marge);
+  const scale = Math.max(schwelle + grenze * 1.5, marge * 1.05, 1);
+  const w1 = schwelle / scale * 100, w2 = grenze / scale * 100, w3 = Math.max(0, 100 - w1 - w2);
+  const fill = Math.min(100, marge / scale * 100);
+  const von = CK_MONATE[b.monat_von - 1], bis = CK_MONATE[b.monat_bis - 1];
+  let big, sub, note;
+  if (b.freigegeben){
+    big = ckEur(b.provision) + ' Provision';
+    sub = 'Block ist freigegeben.';
+  } else if (marge < schwelle){
+    big = 'Noch ' + ckEur(schwelle - marge) + ' bis zur Provision';
+    sub = ckEur(marge) + ' Marge bisher im Block' + (cc > 0 ? ' · Schwelle ' + ckEur(r.kostenschwelle) + ' plus ' + ckEur(cc) + ' Cashcarry' : '');
+  } else {
+    big = ckEur(b.provision) + ' Provision im Block';
+    sub = ckEur(marge) + ' Marge bisher im Block';
+  }
+  if (rookie){
+    note = 'Als Rookie bekommst du je Block den höheren Wert aus Aktivitätsbonus (' + ckEur(r.rookie_bonus_perm) + ' je Perm, ' + ckEur(r.rookie_bonus_temp) + ' je Temp) und Marge-Provision. Aktuell: ' + esc(b.berechnung || '–') + '.';
+  } else if (marge >= schwelle && marge < schwelle + grenze){
+    note = 'Noch ' + ckEur(schwelle + grenze - marge) + ' bis zur ' + ckPct(r.satz_2) + '-Zone.';
+  } else if (marge < schwelle){
+    note = 'Über der Schwelle gibt es ' + ckPct(r.satz_1) + ' auf jeden weiteren Euro, ab ' + ckEur(schwelle + grenze) + ' ' + ckPct(r.satz_2) + '.';
+  }
+  if (!b.freigegeben && d.pos.some(x => x.bereich !== 'fest')){
+    note = (note ? note + ' ' : '') + 'Deine ANÜ- und Interim-Marge des laufenden Monats wird erst im Folgemonat abgerechnet.';
+  }
+  return `<div class="ck-card wide">
+    <div class="ck-cardhead"><h3>Laufender Block ${b.block} · ${von} / ${bis}</h3><span class="ck-pill ${b.freigegeben ? 'ok' : 'warn'}">${b.freigegeben ? 'freigegeben' : 'läuft'}</span></div>
+    <div class="ck-big">${big}</div>
+    <div class="ck-sub">${sub}</div>
+    <div class="ck-bar" role="img" aria-label="${esc(ckEur(marge) + ' von ' + ckEur(schwelle))}">
+      <div class="z1" style="width:${w1}%"></div><div class="z2" style="width:${w2}%"></div><div class="z3" style="width:${w3}%"></div>
+      <div class="fill" style="width:${fill}%"></div><div class="mark" style="left:calc(${w1}% - 1px)"></div>
+    </div>
+    <div class="ck-scale"><span>Schwelle <strong>${ckEur(schwelle)}</strong></span><span>${ckPct(r.satz_1)} bis ${ckEur(schwelle + grenze)}</span><span>danach ${ckPct(r.satz_2)}</span></div>
+    ${note ? '<div class="ck-note">' + note + '</div>' : ''}
+  </div>`;
+}
+
+function ckJahresbonusHtml(d){
+  const jb = d.jb;
+  if (!jb || jb.bonus === null || jb.bonus === undefined) return '';
+  const r = d.regel;
+  const s1 = ckNum(r.jb_schwelle_1), s2 = ckNum(r.jb_schwelle_2) || s1;
+  const m = ckNum(jb.marge_gesamt);
+  const scale = Math.max(s2, m, 1);
+  const fill = Math.min(100, m / scale * 100);
+  const mk1 = s1 / scale * 100;
+  const offen = ckSum(d.raten, x => x.offen_gesamt);
+  let big, sub;
+  if (jb.naechste_schwelle){
+    big = 'Noch ' + ckEur(jb.fehlt);
+    sub = (ckNum(jb.bonus) > 0 ? 'Aktuell <strong>' + ckEur(jb.bonus) + '</strong> (' + esc(jb.erreicht) + '). ' : '')
+      + 'Bis zur ' + ckPct(jb.naechster_satz) + '-Stufe (' + ckEur(jb.naechste_schwelle) + '), das wären <strong>mind. '
+      + ckEur(ckNum(jb.naechste_schwelle) * ckNum(jb.naechster_satz)) + ' Jahresbonus</strong>';
+  } else {
+    big = esc(jb.erreicht) + ' erreicht';
+    sub = 'Jahresbonus aktuell <strong>' + ckEur(jb.bonus) + '</strong>';
+  }
+  return `<div class="ck-card">
+    <div class="ck-cardhead"><h3>Jahresbonus ${d.y}</h3><span class="meta">Auszahlung im Januar</span></div>
+    <div class="ck-big">${big}</div>
+    <div class="ck-sub">${sub}</div>
+    <div class="ck-bar" style="background:var(--border)" role="img" aria-label="${esc(ckEur(m) + ' von ' + ckEur(s2))}">
+      <div class="fill" style="width:${fill}%"></div><div class="mark" style="left:calc(${mk1}% - 1px)"></div>
+    </div>
+    <div class="ck-scale"><span>${ckPct(r.jb_satz_1)} ab <strong>${ckEur(s1)}</strong> (Strich)</span>${s2 > s1 ? `<span>${ckPct(r.jb_satz_2)} ab <strong>${ckEur(s2)}</strong> (Ende)</span>` : ''}</div>
+    <div class="ck-foot">Stand ${ckEur(m)} Marge${offen > 0 ? ' · mit allen offenen Raten wären es ' + ckEur(m + offen) : ''}. Der Bonus gilt auf den ganzen Jahreswert, sobald die Stufe erreicht ist.</div>
+  </div>`;
+}
+
+function ckBlocksHtml(d, curBlock){
+  if (!d.bloecke.length) return '';
+  const rookie = d.row.stufe === 'rookie';
+  const cards = d.bloecke.map(b => {
+    const future = b.block > curBlock;
+    const now = b.block === curBlock;
+    const prov = ckNum(b.provision);
+    const cls = future ? 'future' : now ? 'now' : (prov > 0 ? '' : 'bad');
+    const t = `Block ${b.block} · ${CK_MONATE[b.monat_von - 1]} / ${CK_MONATE[b.monat_bis - 1]}`;
+    let p, n = '';
+    if (future){ p = '<span style="color:var(--ink-soft)">kommt noch</span>'; }
+    else if (prov > 0){ p = `<span style="color:var(--ok-fg)">+ ${ckEur(prov)} Provision</span>`; }
+    else if (now){ p = '<span style="color:#7a5810">läuft</span>'; }
+    else { p = '<span style="color:var(--bad-fg)">unter Schwelle</span>'; }
+    if (!future){
+      if (b.freigegeben) n = `freigegeben · <a href="#" onclick="ckPdf(${b.block});return false;">Abrechnung als PDF</a>`;
+      else if (rookie) n = esc(b.berechnung || '');
+      else if (!now && ckNum(b.cashcarry_ende) > 0) n = 'Cashcarry ' + ckEur(b.cashcarry_ende);
+      else if (ckNum(b.cashcarry_start) > 0) n = 'nach Abzug ' + ckEur(b.cashcarry_start) + ' Cashcarry';
+      else n = now ? 'noch offen' : 'noch nicht freigegeben';
+    }
+    return `<div class="ck-block ${cls}"><div class="t">${t}</div><div class="m">${future ? '–' : ckEur(b.marge)}</div><div class="p">${p}</div><div class="n">${n}</div></div>`;
+  }).join('');
+  return `<div class="ck-card"><h3>Meine Blöcke ${d.y}</h3><div class="ck-blocks">${cards}</div></div>`;
+}
+
+function ckMonthsHtml(d){
+  const months = [...new Set(d.pos.map(x => Number(x.monat)))].sort((a, b) => a - b);
+  if (!months.length) return '';
+  const bereiche = ['anue', 'interim', 'fest'].filter(b => d.pos.some(x => x.bereich === b));
+  const hasUms = d.pos.some(x => x.umsatz_netto != null);
+  let h = '<div class="ck-card"><h3>Monatsverlauf ' + d.y + '</h3><div class="ck-tablewrap"><table class="kpi-table"><thead><tr><th>Monat</th>'
+    + bereiche.map(b => `<th class="num">${CK_BEREICH[b]}</th>`).join('') + '<th class="num">Marge-Anteil</th>' + (hasUms ? '<th class="num">Umsatz gesamt</th>' : '') + '</tr></thead><tbody>';
+  months.forEach(m => {
+    const rows = d.pos.filter(x => Number(x.monat) === m);
+    h += `<tr><td>${CK_MONATE[m - 1]}</td>` + bereiche.map(b => `<td class="num">${ckEur(ckSum(rows.filter(x => x.bereich === b), x => x.anteil))}</td>`).join('')
+      + `<td class="num"><strong>${ckEur(ckSum(rows, x => x.anteil))}</strong></td>` + (hasUms ? `<td class="num">${ckEur(ckSum(rows, x => x.umsatz_netto))}</td>` : '') + '</tr>';
+  });
+  return h + '</tbody></table></div></div>';
+}
+
+/* ---------- Hinweise ---------- */
+function ckHints(d, curBlock){
+  const out = [];
+  d.ein.forEach(e => {
+    const st = String(e.status || '').toLowerCase();
+    const firma = e.firma ? e.firma : '';
+    if (st.includes('übernommen')){
+      if (!e.ende || ckDaysUntil(e.ende) >= -60){
+        out.push({ warn: false, icon: 'swap', t: e.kandidat + ' übernommen', s: (firma ? firma + ': ' : '') + 'Die laufende Marge entfällt, das Übernahme-Honorar zählt in der Festvermittlung.' });
+      }
+      return;
+    }
+    if (st.includes('beendet') || st.includes('gekündigt')) return;
+    if (e.ende){
+      const dd = ckDaysUntil(e.ende);
+      if (dd >= -31 && dd <= 45){
+        out.push({ warn: true, icon: 'clock', t: 'Befristung ' + (dd < 0 ? 'ausgelaufen' : 'läuft aus') + ': ' + e.kandidat,
+          s: (firma ? firma + ', ' : '') + (dd < 0 ? 'seit ' : 'bis ') + ckDate(e.ende) + '. Verlängerung oder Übernahme klären.' });
+      }
+    }
+    if (e.beginn && e.bereich === 'anue'){
+      const nine = new Date(e.beginn + 'T00:00:00'); nine.setMonth(nine.getMonth() + 9);
+      const t0 = new Date(); t0.setHours(0,0,0,0);
+      const dd = Math.round((nine - t0) / 86400000);
+      if (dd >= 0 && dd <= 42 && (!e.ende || new Date(e.ende + 'T00:00:00') > nine)){
+        out.push({ warn: true, icon: 'clock', t: '9 Monate im Einsatz: ' + e.kandidat, s: (firma ? firma + ', ' : '') + 'am ' + nine.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' }) + '. Equal Pay und Übernahme rechtzeitig ansprechen.' });
+      }
+    }
+    const hasPos = d.pos.some(x => x.bereich === e.bereich && x.kandidat === e.kandidat);
+    if (!hasPos && e.beginn && ckDaysUntil(e.beginn) < -35){
+      out.push({ warn: false, icon: 'info', t: e.kandidat + ': noch keine Marge', s: (firma ? firma + ', ' : '') + 'seit ' + ckDate(e.beginn) + ' im Einsatz, in den Zahlen steht aber noch nichts.' });
+    }
+  });
+  const offen = ckSum(d.raten, r => r.offen_gesamt);
+  if (offen > 0){
+    out.push({ warn: true, icon: 'card', t: 'Offene Raten ' + ckEur(offen),
+      s: d.raten.map(r => r.kandidat + (r.firma ? ' (' + r.firma + ')' : '') + (r.raten ? ' Rate ' + r.raten : '')).join(', ') + '. Fälligkeiten sind nicht hinterlegt.' });
+  }
+  const prev = d.bloecke.find(b => b.block === curBlock - 1);
+  if (d.regel.bonus_aktiv && prev && !prev.freigegeben && d.y === new Date().getFullYear() && d.pos.some(x => x.bereich !== 'fest')){
+    out.push({ warn: false, icon: 'card', t: 'Block ' + prev.block + ' noch offen', s: 'Die ANÜ- und Interim-Marge des letzten Monats kommt mit der nächsten Abrechnung dazu.' });
+  }
+  return out.slice(0, 6);
+}
+
+/* ---------- Splitt-Tabellen ---------- */
+function ckPill(cls, txt){ return `<span class="ck-pill ${cls}">${esc(txt)}</span>`; }
+
+function ckEinsatzPill(e, lastMonat){
+  if (!e) return lastMonat ? ckPill('grey', 'zuletzt ' + CK_MONATE[lastMonat - 1]) : '';
+  const st = String(e.status || '').toLowerCase();
+  if (st.includes('übernommen')) return ckPill('info', 'übernommen' + (e.ende ? ' ' + ckMonYear(e.ende) : ''));
+  if (st.includes('beendet') || st.includes('gekündigt')) return ckPill('grey', e.ende ? 'beendet ' + ckMonYear(e.ende) : 'beendet');
+  if (e.ende){
+    const dd = ckDaysUntil(e.ende);
+    if (dd < 0) return ckPill('grey', 'bis ' + ckMonYear(e.ende));
+    if (dd <= 45) return ckPill('warn', 'befristet bis ' + ckDate(e.ende));
+    return ckPill('ok', 'bis ' + ckMonYear(e.ende));
+  }
+  if (e.beginn) return ckPill('ok', 'läuft seit ' + ckMonYear(e.beginn));
+  return e.zeitraum ? esc(e.zeitraum) : '';
+}
+
+function ckRunningTableHtml(d, bereich){
+  const rows = d.pos.filter(x => x.bereich === bereich);
+  const ein = d.ein.filter(e => e.bereich === bereich);
+  if (!rows.length && !ein.length) return '';
+  const lastMonat = rows.reduce((a, x) => Math.max(a, Number(x.monat)), 0);
+  const groups = new Map();
+  rows.forEach(x => {
+    const k = x.kandidat || '–';
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(x);
+  });
+  ein.forEach(e => { if (!groups.has(e.kandidat)) groups.set(e.kandidat, []); });
+  const list = [...groups.entries()].map(([k, arr]) => {
+    const e = ein.find(x => x.kandidat === k);
+    const latest = arr.slice().sort((a, b) => b.monat - a.monat)[0] || {};
+    return {
+      k, arr, e,
+      firma: (e && e.firma) || latest.firma || '',
+      rolle: latest.rolle || (e && e.rolle) || '',
+      partner: latest.partner || (e && e.partner) || '',
+      last: ckSum(arr.filter(x => Number(x.monat) === lastMonat), x => x.anteil),
+      total: ckSum(arr, x => x.anteil),
+      neg: arr.some(x => x.negativ),
+      lm: arr.reduce((a, x) => Math.max(a, Number(x.monat)), 0)
+    };
+  }).sort((a, b) => b.total - a.total || String(a.k).localeCompare(String(b.k), 'de'));
+  const total = ckSum(list, x => x.total);
+  const title = bereich === 'anue' ? 'ANÜ' : 'Interim';
+  const who = bereich === 'anue' ? 'Mitarbeiter' : 'Interim Manager';
+  let h = `<div class="ck-card"><div class="ck-cardhead"><h3>Meine Splitts · ${title}</h3><span class="meta">${list.length} ${bereich === 'anue' ? 'Überlassung' + (list.length === 1 ? '' : 'en') : 'Einsätze'} · ${ckEur(total)} Anteil</span></div>`;
+  h += `<div class="ck-tablewrap"><table class="kpi-table"><thead><tr><th>${who}</th><th>Firma</th><th>Meine Rolle</th><th>Partner</th><th class="num">Anteil ${lastMonat ? CK_MONATE[lastMonat - 1] : ''}</th><th class="num">Anteil ${d.y}</th><th>Einsatz</th></tr></thead><tbody>`;
+  list.forEach(x => {
+    const lastCell = x.arr.length ? (x.lm === lastMonat ? ckEur(x.last) : '–') : '–';
+    h += `<tr><td><strong>${esc(x.k)}</strong></td><td>${esc(x.firma)}</td><td>${esc(x.rolle)}</td><td>${esc(x.partner || 'allein')}</td>`
+      + `<td class="num">${lastCell}</td><td class="num"><strong>${x.arr.length ? ckEur(x.total) : '–'}</strong>${x.neg ? ' *' : ''}</td>`
+      + `<td>${x.arr.length || x.e ? ckEinsatzPill(x.e, x.lm) : ''}${!x.arr.length ? ' ' + ckPill('warn', 'keine Marge erfasst') : ''}</td></tr>`;
+  });
+  h += '</tbody></table></div>';
+  if (list.some(x => x.neg)) h += '<p class="save-hint">* In mindestens einem Monat negative Marge, dieser Monat zählt mit 0 €.</p>';
+  return h + '</div>';
+}
+
+function ckRatenText(rates){
+  const nums = rates.map(r => String(r).split('/')).filter(p => p.length === 2).map(p => [Number(p[0]), Number(p[1])]);
+  if (!nums.length) return '';
+  const xs = nums.map(n => n[0]).sort((a, b) => a - b), of = nums[0][1];
+  if (xs.length === 1) return 'Rate ' + xs[0] + ' von ' + of;
+  return 'Raten ' + xs[0] + '–' + xs[xs.length - 1] + ' von ' + of;
+}
+
+function ckFestTableHtml(d){
+  const rows = d.pos.filter(x => x.bereich === 'fest');
+  if (!rows.length && !d.raten.length) return '';
+  const groups = new Map();
+  rows.forEach(x => {
+    const k = (x.kandidat || '–') + '|' + (x.firma || '');
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(x);
+  });
+  const list = [...groups.values()].map(arr => {
+    const f = arr[0];
+    const rates = arr.map(x => x.rate).filter(Boolean);
+    const offen = d.raten.filter(r => r.kandidat === f.kandidat && (!r.firma || !f.firma || r.firma === f.firma));
+    const offenSum = ckSum(offen, r => r.offen_gesamt);
+    const ofN = rates.length ? Number(String(rates[0]).split('/')[1]) : 0;
+    let status;
+    if (offenSum > 0) status = ckPill('warn', (offen[0].raten && String(offen[0].raten).includes(',') ? 'Raten ' : 'Rate ') + (offen[0].raten || '') + ' offen · ' + ckEur(offenSum));
+    else if (rates.length && ofN && rates.some(r => String(r).startsWith(ofN + '/'))) status = ckPill('ok', 'abgeschlossen');
+    else if (arr.every(x => String(x.status || '').toLowerCase() === 'bezahlt')) status = ckPill('ok', 'bezahlt');
+    else status = '<span style="color:var(--ink-soft)">gestellt</span>';
+    const rechnung = rates.length ? ckRatenText(rates)
+      : arr.map(x => CK_MONATE[x.monat - 1] + (x.beleg ? ' · ' + x.beleg : '')).join(', ');
+    return { f, arr, total: ckSum(arr, x => x.anteil), status, rechnung };
+  }).sort((a, b) => b.total - a.total);
+  const total = ckSum(list, x => x.total);
+  let h = `<div class="ck-card"><div class="ck-cardhead"><h3>Meine Splitts · Festvermittlung</h3><span class="meta">${list.length} Kandidat${list.length === 1 ? '' : 'en'} · ${ckEur(total)} Anteil</span></div>`;
+  h += '<div class="ck-tablewrap"><table class="kpi-table"><thead><tr><th>Kandidat</th><th>Firma</th><th>Rechnung</th><th>Meine Rolle</th><th>Partner</th><th class="num">Mein Anteil</th><th>Status</th></tr></thead><tbody>';
+  list.forEach(x => {
+    h += `<tr><td><strong>${esc(x.f.kandidat)}</strong></td><td>${esc(x.f.firma || '')}</td><td>${esc(x.rechnung)}</td><td>${esc(x.f.rolle || '')}</td><td>${esc(x.f.partner || 'allein')}</td>`
+      + `<td class="num"><strong>${ckEur(x.total)}</strong></td><td>${x.status}</td></tr>`;
+  });
+  return h + '</tbody></table></div></div>';
+}
+
+/* ---------- Woher der Anteil kommt ---------- */
+function ckRoleWeights(rolle){
+  const w = {}; let total = 0;
+  const re = /(Talent|Kunde|Lead)\s*(\d+(?:[.,]\d+)?)\s*%/gi; let m;
+  while ((m = re.exec(String(rolle || '')))){
+    const k = m[1][0].toUpperCase() + m[1].slice(1).toLowerCase();
+    const v = Number(m[2].replace(',', '.'));
+    w[k] = (w[k] || 0) + v; total += v;
+  }
+  if (!total) return null;
+  Object.keys(w).forEach(k => w[k] /= total);
+  return w;
+}
+
+function ckRolesHtml(d){
+  const agg = { Kunde: 0, Talent: 0, Lead: 0 };
+  d.pos.forEach(x => {
+    const w = ckRoleWeights(x.rolle);
+    if (!w) return;
+    Object.keys(w).forEach(k => agg[k] += ckNum(x.anteil) * w[k]);
+  });
+  const tot = agg.Kunde + agg.Talent + agg.Lead;
+  if (tot <= 0) return '';
+  const pct = v => Math.round(v / tot * 100);
+  const col = { Kunde: 'var(--green-dark)', Talent: '#F48D40', Lead: '#c5cfc8' };
+  const lbl = { Kunde: 'Kundenseite', Talent: 'Talentseite', Lead: 'Lead' };
+  const keys = ['Kunde', 'Talent', 'Lead'].filter(k => agg[k] > 0);
+  return `<div class="ck-card"><h3>Woher dein Anteil ${d.y} kommt</h3>
+    <div class="ck-bar" style="height:12px;margin-top:12px" role="img" aria-label="${keys.map(k => lbl[k] + ' ' + pct(agg[k]) + ' %').join(', ')}">${keys.map(k => `<div style="width:${agg[k] / tot * 100}%;background:${col[k]}"></div>`).join('')}</div>
+    <div class="ck-legend">${keys.map(k => `<span><i style="background:${col[k]}"></i>${lbl[k]} ${pct(agg[k])} % · ${ckEur(agg[k])}</span>`).join('')}</div></div>`;
+}
+
+/* ---------- Aktivität -> Ergebnis ---------- */
+function ckActivityHtml(d){
+  const a = d.akt || { byCode: {}, first: null };
+  if (!a.first){
+    return '<div class="ck-card" style="border-style:dashed"><h3>Von der Aktivität zum Ergebnis</h3><p class="ck-sub" style="margin:8px 0 0">Sobald du im Tracker Klicks erfasst, steht hier, wie aus Decider-Calls, Terminen und CVs deine Abschlüsse werden.</p></div>';
+  }
+  const m0 = Number(String(a.first).slice(5, 7));
+  const seit = d.pos.filter(x => Number(x.monat) >= m0);
+  const anteilSeit = ckSum(seit, x => x.anteil);
+  const festNeu = new Set(seit.filter(x => x.bereich === 'fest' && (!x.rate || String(x.rate).startsWith('1/'))).map(x => x.kandidat + '|' + x.firma)).size;
+  const einsNeu = d.ein.filter(e => e.beginn && e.beginn >= a.first).length;
+  const abschl = festNeu + einsNeu;
+  const n = c => Math.round(a.byCode[c] || 0);
+  const dec = n('DEC');
+  const box = (v, l, dark) => `<div${dark ? ' class="dark"' : ''}><b>${v.toLocaleString('de-DE')}</b><span>${l}</span></div>`;
+  let h = `<div class="ck-card"><div class="ck-cardhead"><h3>Von der Aktivität zum Ergebnis</h3><span class="meta">seit ${ckDate(a.first)} im Tracker</span></div>`;
+  h += '<div class="ck-funnel">' + box(dec, 'Decider-Calls') + box(n('F2F'), 'Face2Face') + box(n('CV'), 'CV on Spot') + box(n('VT'), 'VT-Beteiligungen') + box(abschl, 'Abschlüsse', true) + '</div>';
+  const chips = [];
+  if (dec > 0 && anteilSeit > 0) chips.push('<strong>≈ ' + ckEur(anteilSeit / dec) + '</strong> Anteil pro Decider-Call');
+  if (dec > 0 && abschl > 0) chips.push('<strong>≈ ' + Math.round(dec / abschl).toLocaleString('de-DE') + ' Calls</strong> pro Abschluss');
+  if (abschl > 0 && anteilSeit > 0) chips.push('<strong>≈ ' + ckEur(anteilSeit / abschl) + '</strong> Anteil pro Abschluss');
+  if (chips.length) h += '<div class="ck-chips">' + chips.map(c => '<span>' + c + '</span>').join('') + '</div>';
+  h += '<p class="save-hint">Abschlüsse = neue Festvermittlungen (ohne Folgeraten) und neu gestartete Einsätze seit Beginn der Erfassung. ANÜ-Marge kommt mit einem Monat Verzug.</p>';
+  return h + '</div>';
+}
+
+/* ---------- Abrechnung als PDF ---------- */
+function ckPdfText(s){
+  return String(s ?? '').replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/Ä/g,'Ae').replace(/Ö/g,'Oe').replace(/Ü/g,'Ue')
+    .replace(/ß/g,'ss').replace(/€/g,'EUR').replace(/×/g,'x').replace(/·/g,'-').replace(/[–—]/g,'-').replace(/≈/g,'ca.');
+}
+function ckPdf(block){
+  const d = ckCache; if (!d) return;
+  const a = d.abr.find(x => Number(x.block) === Number(block));
+  if (a) ckPdfFromRow(a, d.p);
+}
+function ckPdfFromRow(a, p){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const T = ckPdfText, E = v => T(ckEur(v, 2));
+  const von = CK_MONATE[(a.block * 2) - 2], bis = CK_MONATE[(a.block * 2) - 1];
+  doc.setFontSize(16); doc.setTextColor(28,56,41);
+  doc.text(T('Provisionsabrechnung Block ' + a.block + ' / ' + a.jahr), 14, 18);
+  doc.setFontSize(11); doc.setTextColor(90,102,96);
+  doc.text(T((p ? p.name : '') + ' - ' + von + ' / ' + bis + ' ' + a.jahr + ' - Stufe ' + a.stufe), 14, 25);
+  doc.text(T('Freigegeben am ' + new Date(a.freigegeben_am).toLocaleDateString('de-DE')), 14, 31);
+  let y = 44;
+  const kv = [
+    ['Marge im Block', E(a.marge)],
+    ['Cashcarry (Verlustvortrag) zu Beginn', E(a.cashcarry_start)],
+    ['Angepasste Marge', E(a.angepasste_marge)],
+    ['Berechnung', T(a.berechnung || '')],
+    ['Provision', E(a.provision)],
+    ['Cashcarry fuer den naechsten Block', E(a.cashcarry_ende)]
+  ];
+  doc.setFontSize(11);
+  kv.forEach(([k, v], i) => {
+    if (i === 4){ doc.setFont(undefined, 'bold'); }
+    doc.setTextColor(28,36,32); doc.text(k, 14, y); doc.text(v, 196, y, { align: 'right' });
+    doc.setFont(undefined, 'normal');
+    y += 8;
+  });
+  y += 6;
+  doc.setFontSize(13); doc.setTextColor(28,56,41);
+  doc.text('Positionen im Block', 14, y); y += 7;
+  doc.setFillColor(28,56,41); doc.rect(14, y - 5, 182, 8, 'F');
+  doc.setFontSize(9.5); doc.setTextColor(255,255,255);
+  doc.text('Monat', 16, y); doc.text('Bereich', 32, y); doc.text('Kandidat', 52, y); doc.text('Firma', 100, y); doc.text('Anteil', 194, y, { align: 'right' });
+  y += 8; doc.setTextColor(28,36,32);
+  (a.details || []).forEach(x => {
+    if (y > 282){ doc.addPage(); y = 20; }
+    doc.text(CK_MONATE[x.monat - 1] ? T(CK_MONATE[x.monat - 1]) : '', 16, y);
+    doc.text(T(CK_BEREICH[x.bereich] || x.bereich), 32, y);
+    doc.text(T(String(x.kandidat || '') + (x.rate ? ' ' + x.rate : '')).slice(0, 30), 52, y);
+    doc.text(T(x.firma || '').slice(0, 44), 100, y);
+    doc.text(E(x.anteil), 194, y, { align: 'right' });
+    y += 6.5;
+  });
+  if (!(a.details || []).length){ doc.text('Keine Positionen im Block.', 16, y); y += 6.5; }
+  y += 6; doc.setFontSize(9); doc.setTextColor(90,102,96);
+  doc.text(T('Grundlage: Bonusmodell, Basis Marge. ANUE und Interim nach Leistungsmonat, Festvermittlung nach Rechnungsdatum.'), 14, Math.min(y, 290));
+  const code = (p && p.code) || 'Berater';
+  doc.save('Provisionsabrechnung_' + code + '_' + a.jahr + '_Block' + a.block + '.pdf');
+}
+
+/* =========================================================
+   ADMIN: Cockpit-Verwaltung
+   ========================================================= */
+async function ckAdminRender(){
+  await initCockpit();
+  await ckStufenRender();
+  await ckImportListRender();
+  ckFreiInit();
+  await ckFreiRender();
+  ckRegelnRender();
+}
+function ckHint(id, text, ok){
+  const el = document.getElementById(id); if (!el) return;
+  el.innerHTML = text ? `<span class="dot" style="background:${ok === false ? 'var(--bad-fg)' : 'var(--ok-fg)'}"></span>${esc(text)}` : '';
+}
+
+/* --- Stufen --- */
+async function ckStufenRender(){
+  const y = new Date().getFullYear();
+  const { data: starts } = await sb.from('cockpit_jahresstart').select('*').eq('jahr', y);
+  const map = {}; (starts || []).forEach(s => map[s.user_id] = s);
+  let html = `<thead><tr><th>Berater</th><th>Stufe</th><th>Eintritt (für Rookie)</th><th class="num">Cashcarry am 01.01.${y}</th></tr></thead><tbody>`;
+  allProfiles.filter(p => p.status !== 'pending').forEach(p => {
+    const r = cockpitBerater.find(x => x.user_id === p.id);
+    const opts = [['', '– kein Cockpit –']].concat(CK_STUFEN)
+      .map(([v, l]) => `<option value="${v}"${(r ? r.stufe : '') === v ? ' selected' : ''}>${l}</option>`).join('');
+    html += `<tr><td><strong>${esc(p.code || '')}</strong> ${esc(p.name)}</td>
+      <td><select onchange="ckSaveStufe('${p.id}', this.value)" aria-label="Stufe ${esc(p.name)}">${opts}</select></td>
+      <td><input type="date" value="${r && r.eintritt ? r.eintritt : ''}" ${r ? '' : 'disabled'} onchange="ckSaveEintritt('${p.id}', this.value)" aria-label="Eintritt ${esc(p.name)}"></td>
+      <td class="num"><input type="number" step="0.01" value="${map[p.id] ? map[p.id].cashcarry_start : 0}" ${r ? '' : 'disabled'} onchange="ckSaveStart('${p.id}', this.value)" aria-label="Cashcarry ${esc(p.name)}"> €</td></tr>`;
+  });
+  document.getElementById('ckStufenTable').innerHTML = html + '</tbody>';
+}
+async function ckSaveStufe(uid, stufe){
+  const y = new Date().getFullYear();
+  let res;
+  if (!stufe) res = await sb.from('cockpit_berater').delete().eq('user_id', uid);
+  else res = await sb.from('cockpit_berater').upsert({ user_id: uid, stufe, geaendert_am: new Date().toISOString() }, { onConflict: 'user_id' });
+  if (res.error){ ckHint('ckStufenHint', 'Speichern fehlgeschlagen: ' + res.error.message, false); return; }
+  if (stufe) await sb.from('cockpit_jahresstart').upsert({ user_id: uid, jahr: y, cashcarry_start: 0 }, { onConflict: 'user_id,jahr', ignoreDuplicates: true });
+  ckHint('ckStufenHint', 'Gespeichert.');
+  await initCockpit(); await ckStufenRender(); ckFreiInit(); await ckFreiRender();
+}
+async function ckSaveEintritt(uid, val){
+  const { error } = await sb.from('cockpit_berater').update({ eintritt: val || null, geaendert_am: new Date().toISOString() }).eq('user_id', uid);
+  ckHint('ckStufenHint', error ? 'Speichern fehlgeschlagen: ' + error.message : 'Gespeichert.', !error);
+  if (!error) await initCockpit();
+}
+async function ckSaveStart(uid, val){
+  const y = new Date().getFullYear();
+  const { error } = await sb.from('cockpit_jahresstart').upsert({ user_id: uid, jahr: y, cashcarry_start: Number(val) || 0 }, { onConflict: 'user_id,jahr' });
+  ckHint('ckStufenHint', error ? 'Speichern fehlgeschlagen: ' + error.message : 'Gespeichert.', !error);
+  if (!error) await ckFreiRender();
+}
+
+/* --- Import --- */
+async function ckImportPreview(){
+  const input = document.getElementById('ckImportFile');
+  const btn = document.getElementById('ckImportBtn');
+  const prev = document.getElementById('ckImportPreview');
+  ckImportData = null; btn.disabled = true; prev.innerHTML = '';
+  const f = input.files && input.files[0];
+  if (!f){ ckHint('ckImportHint', ''); return; }
+  try {
+    const j = JSON.parse(await ckReadFile(f));
+    if (!Number.isInteger(j.jahr)) throw new Error('„jahr“ fehlt');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(j.stand || ''))) throw new Error('„stand“ fehlt (JJJJ-MM-TT)');
+    if (!Array.isArray(j.positionen)) throw new Error('„positionen“ fehlt');
+    const bad = j.positionen.find(x => !['anue','interim','fest'].includes(x.bereich) || !(Number(x.monat) >= 1 && Number(x.monat) <= 12) || !x.kuerzel);
+    if (bad) throw new Error('ungültige Position: ' + JSON.stringify(bad).slice(0, 120));
+    const codes = {}; allProfiles.forEach(p => { if (p.code) codes[String(p.code).toUpperCase()] = p; });
+    const per = {};
+    j.positionen.forEach(x => {
+      const k = String(x.kuerzel).toUpperCase();
+      per[k] = per[k] || { n: 0, sum: 0, b: {} };
+      per[k].n++; per[k].sum += ckNum(x.anteil);
+      per[k].b[x.bereich] = (per[k].b[x.bereich] || 0) + ckNum(x.anteil);
+    });
+    let html = '<thead><tr><th>Kürzel</th><th>Berater</th><th class="num">Zeilen</th><th class="num">ANÜ</th><th class="num">Interim</th><th class="num">Fest</th><th class="num">Anteil gesamt</th></tr></thead><tbody>';
+    Object.keys(per).sort().forEach(k => {
+      const p = codes[k];
+      html += `<tr><td><strong>${esc(k)}</strong></td><td>${p ? esc(p.name) : '<span style="color:var(--bad-fg)">kein Konto, wird nicht angezeigt</span>'}</td><td class="num">${per[k].n}</td>`
+        + ['anue','interim','fest'].map(b => `<td class="num">${per[k].b[b] ? ckEur(per[k].b[b]) : '–'}</td>`).join('')
+        + `<td class="num"><strong>${ckEur(per[k].sum)}</strong></td></tr>`;
+    });
+    prev.innerHTML = html + '</tbody>';
+    ckHint('ckImportHint', `Jahr ${j.jahr}, Stand ${ckDate(j.stand)}: ${j.positionen.length} Positionen, ${(j.einsaetze || []).length} Einsätze, ${(j.offene_raten || []).length} offene Raten. Der Import ersetzt alle bisherigen Zahlen für ${j.jahr}, freigegebene Blöcke bleiben unverändert.`);
+    ckImportData = j; btn.disabled = false;
+  } catch (e){
+    ckHint('ckImportHint', 'Datei kann nicht importiert werden: ' + e.message, false);
+  }
+}
+async function ckImportRun(){
+  if (!ckImportData) return;
+  const btn = document.getElementById('ckImportBtn');
+  btn.disabled = true; ckHint('ckImportHint', 'Importiere …');
+  const j = ckImportData;
+  const { error } = await sb.rpc('cockpit_import', {
+    p_jahr: j.jahr, p_stand: j.stand, p_quelle: j.quelle || 'Splitt-Lauf',
+    p_daten: { positionen: j.positionen, einsaetze: j.einsaetze || [], offene_raten: j.offene_raten || [] }
+  });
+  if (error){ ckHint('ckImportHint', 'Import fehlgeschlagen: ' + error.message, false); btn.disabled = false; return; }
+  ckImportData = null;
+  document.getElementById('ckImportFile').value = '';
+  document.getElementById('ckImportPreview').innerHTML = '';
+  ckHint('ckImportHint', 'Import abgeschlossen.');
+  await ckImportListRender();
+  await ckFreiRender();
+  if (!document.getElementById('tab-cockpit').classList.contains('hidden')) await renderCockpit();
+}
+async function ckImportListRender(){
+  const { data } = await sb.from('cockpit_importe').select('*').order('id', { ascending: false }).limit(5);
+  const rows = data || [];
+  let html = '<thead><tr><th>Letzte Importe</th><th>Jahr</th><th>Stand der Zahlen</th><th class="num">Zeilen</th><th>Quelle</th></tr></thead><tbody>';
+  if (!rows.length) html += '<tr><td colspan="5" class="soft">Noch kein Import.</td></tr>';
+  rows.forEach(r => {
+    const p = ckProfile(r.importiert_von);
+    html += `<tr><td>${new Date(r.importiert_am).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })}${p ? ' · ' + esc(p.name) : ''}</td><td>${r.jahr}</td><td>${ckDate(r.stand)}</td><td class="num">${r.zeilen}</td><td>${esc(r.quelle || '')}</td></tr>`;
+  });
+  document.getElementById('ckImportList').innerHTML = html + '</tbody>';
+}
+
+/* --- Freigabe --- */
+function ckFreiInit(){
+  const sel = document.getElementById('ckFreiUser');
+  const prev = sel.value;
+  const opts = cockpitBerater.filter(r => (cockpitRegeln[r.stufe] || {}).bonus_aktiv)
+    .map(r => ({ r, p: ckProfile(r.user_id) })).filter(x => x.p)
+    .sort((a, b) => String(a.p.name).localeCompare(String(b.p.name), 'de'));
+  sel.innerHTML = opts.map(x => `<option value="${x.r.user_id}">${esc(x.p.name)}</option>`).join('');
+  if (prev && opts.some(x => x.r.user_id === prev)) sel.value = prev;
+  const ys = document.getElementById('ckFreiYear');
+  if (!ys.options.length){
+    const y = new Date().getFullYear();
+    ys.innerHTML = `<option value="${y}">${y}</option><option value="${y - 1}">${y - 1}</option>`;
+  }
+}
+async function ckFreiRender(){
+  const box = document.getElementById('ckFreiBody');
+  const uid = document.getElementById('ckFreiUser').value;
+  const y = Number(document.getElementById('ckFreiYear').value) || new Date().getFullYear();
+  if (!uid){ box.innerHTML = '<p class="save-hint">Noch kein Berater mit Bonusmodell.</p>'; return; }
+  const [{ data: bl, error }, { data: abr }] = await Promise.all([
+    sb.rpc('cockpit_bloecke', { p_jahr: y, p_user: uid }),
+    sb.from('cockpit_abrechnungen').select('*').eq('user_id', uid).eq('jahr', y)
+  ]);
+  if (error){ box.innerHTML = '<p class="save-hint">Fehler: ' + esc(error.message) + '</p>'; return; }
+  ckFreiAbr = {}; (abr || []).forEach(a => ckFreiAbr[a.block] = a);
+  const next = (bl || []).find(b => !b.freigegeben);
+  let html = '<div style="overflow-x:auto"><table class="kpi-table"><thead><tr><th>Block</th><th class="num">Marge</th><th class="num">Cashcarry Start</th><th class="num">Provision</th><th class="num">Cashcarry Ende</th><th>Berechnung</th><th></th></tr></thead><tbody>';
+  (bl || []).forEach(b => {
+    const blk = Number(b.block);
+    let action = '';
+    if (b.freigegeben){
+      const a = ckFreiAbr[blk];
+      action = `<span class="ck-pill ok">freigegeben ${a ? ckDate(a.freigegeben_am) : ''}</span> <button class="add-btn" onclick="ckFreiPdf(${blk})">PDF</button>`;
+    } else if (next && Number(next.block) === blk){
+      action = ckFreiPending === blk
+        ? `<button class="add-btn" onclick="ckFreiGo('${uid}', ${y}, ${blk})">Ja, Block ${blk} freigeben</button> <button class="add-btn" style="background:var(--green-pale);color:var(--ink)" onclick="ckFreiPending=null; ckFreiRender()">Abbrechen</button>`
+        : `<button class="add-btn" onclick="ckFreiPending=${blk}; ckFreiRender()">Block ${blk} freigeben</button>`;
+    }
+    html += `<tr><td>Block ${blk} · ${CK_MONATE[b.monat_von - 1]} / ${CK_MONATE[b.monat_bis - 1]}</td><td class="num">${ckEur(b.marge, 2)}</td><td class="num">${ckEur(b.cashcarry_start, 2)}</td><td class="num"><strong>${ckEur(b.provision, 2)}</strong></td><td class="num">${ckEur(b.cashcarry_ende, 2)}</td><td>${esc(b.berechnung || '')}</td><td style="white-space:nowrap">${action}</td></tr>`;
+  });
+  box.innerHTML = html + '</tbody></table></div><div class="save-hint" id="ckFreiHint"></div>';
+}
+async function ckFreiGo(uid, y, block){
+  const { error } = await sb.rpc('cockpit_block_freigeben', { p_user: uid, p_jahr: y, p_block: block });
+  ckFreiPending = null;
+  await ckFreiRender();
+  ckHint('ckFreiHint', error ? 'Freigabe fehlgeschlagen: ' + error.message : 'Block ' + block + ' ist freigegeben.', !error);
+}
+function ckFreiPdf(block){
+  const a = ckFreiAbr[block]; if (!a) return;
+  ckPdfFromRow(a, ckProfile(a.user_id));
+}
+
+/* --- Regeln --- */
+const CK_REGEL_FELDER = [
+  ['kostenschwelle', 'Schwelle je Block', 'eur'], ['provision_grenze', 'Grenze Satz 1', 'eur'],
+  ['satz_1', 'Satz 1', 'pct'], ['satz_2', 'Satz 2', 'pct'],
+  ['jb_schwelle_1', 'Jahresbonus ab', 'eur'], ['jb_satz_1', 'Satz', 'pct'],
+  ['jb_schwelle_2', 'Jahresbonus ab', 'eur'], ['jb_satz_2', 'Satz', 'pct'],
+  ['rookie_bonus_perm', 'Rookie je Perm', 'eur'], ['rookie_bonus_temp', 'Rookie je Temp', 'eur'],
+  ['mit_cashcarry', 'Cashcarry', 'bool'], ['bonus_aktiv', 'Bonus aktiv', 'bool']
+];
+function ckRegelnRender(){
+  let html = '<thead><tr><th>Stufe</th>' + CK_REGEL_FELDER.map(f => `<th>${f[1]}</th>`).join('') + '</tr></thead><tbody>';
+  CK_STUFEN.forEach(([s, l]) => {
+    const r = cockpitRegeln[s]; if (!r) return;
+    html += `<tr><td><strong>${l}</strong></td>` + CK_REGEL_FELDER.map(([k, lab, t]) => {
+      if (t === 'bool') return `<td style="text-align:center"><input type="checkbox" ${r[k] ? 'checked' : ''} onchange="ckSaveRegel('${s}','${k}','${t}',this)" aria-label="${lab} ${l}"></td>`;
+      const v = r[k] === null || r[k] === undefined ? '' : (t === 'pct' ? Math.round(Number(r[k]) * 10000) / 100 : Number(r[k]));
+      return `<td><input type="number" step="any" value="${v}" onchange="ckSaveRegel('${s}','${k}','${t}',this)" aria-label="${lab} ${l}"></td>`;
+    }).join('') + '</tr>';
+  });
+  document.getElementById('ckRegelnTable').innerHTML = html + '</tbody>';
+}
+async function ckSaveRegel(stufe, field, type, el){
+  let v;
+  if (type === 'bool') v = el.checked;
+  else if (el.value === '') v = null;
+  else { v = Number(el.value); if (type === 'pct') v = v / 100; }
+  if (v === null && ['kostenschwelle', 'provision_grenze', 'satz_1', 'satz_2'].includes(field)){ ckHint('ckRegelnHint', 'Dieses Feld darf nicht leer sein.', false); return; }
+  const { error } = await sb.from('cockpit_regeln').update({ [field]: v, geaendert_am: new Date().toISOString() }).eq('stufe', stufe);
+  if (error){ ckHint('ckRegelnHint', 'Speichern fehlgeschlagen: ' + error.message, false); return; }
+  if (cockpitRegeln[stufe]) cockpitRegeln[stufe][field] = v;
+  el.style.borderColor = 'var(--ok-fg)'; setTimeout(() => el.style.borderColor = '', 800);
+  ckHint('ckRegelnHint', 'Gespeichert.');
+  if (field === 'bonus_aktiv') ckFreiInit();
+  await ckFreiRender();
 }
 
 /* ---------- Init ---------- */
